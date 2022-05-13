@@ -31,8 +31,8 @@ const NavbarComp = () => {
                 <FormControl
                   type="search"
                   placeholder="Search"
-                  className="me-2"
                   aria-label="Search"
+                  className="me-2"
                   style={{ width: "500px" }}
                 />
                 <Button variant="outline-success">Search</Button>

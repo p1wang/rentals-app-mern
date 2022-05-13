@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -8,11 +8,40 @@ import { createListing } from "../redux/listingsSlice";
 const ListingForm = () => {
   const { register, handleSubmit, reset } = useForm();
   const dispatch = useDispatch();
+  // const [base64Images, setBase64Images] = useState();
 
-  const onSubmit = (data) => {
-    dispatch(createListing(data));
+  // const convertToBase64 = (images) => {
+  //   const reader = new FileReader();
+
+  //   reader.onloadend = () => {
+  //     setBase64Images(reader.result.toString());
+  //   };
+
+  //   reader.readAsDataURL(images);
+  // };
+
+  // const onSubmit = (data) => {
+  //   convertToBase64(data.images[0]);
+  //   dispatch(createListing({ ...data, images: base64Images }));
+  // };
+
+  const convertToBase64 = (images) => {
+    const reader = new FileReader();
+
+    return new Promise((resolve, reject) => {
+      reader.onloadend = () => {
+        resolve(reader.result.toString());
+      };
+
+      reader.readAsDataURL(images);
+    });
+  };
+
+  const onSubmit = async (data) => {
+    dispatch(
+      createListing({ ...data, images: await convertToBase64(data.images[0]) })
+    );
     reset();
-    console.log(data);
   };
 
   return (
@@ -96,7 +125,7 @@ const ListingForm = () => {
       {/* file upload */}
       <Form.Group controlId="formFileMultiple" className="mb-3">
         <Form.Label>Multiple files input example</Form.Label>
-        <Form.Control type="file" />
+        <Form.Control type="file" multiple {...register("images")} />
       </Form.Group>
       {/* description */}
       <Form.Group className="mb-3" controlId="description">

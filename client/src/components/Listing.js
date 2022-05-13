@@ -11,9 +11,8 @@ const Listing = ({ listing, setShow }) => {
     <Card>
       <Card.Img
         variant="top"
-        src={
-          "https://www.supercars.net/blog/wp-content/uploads/2020/09/2020-Ferrari-F8-Tributo.jpg"
-        }
+        src={listing.images}
+        style={{ height: "200px", objectFit: "cover" }}
       />
       <Card.Body>
         <small className="d-block text-muted text-end">

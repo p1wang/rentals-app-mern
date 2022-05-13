@@ -7,8 +7,7 @@ export const getListings = createAsyncThunk(
   "listings/getListings",
   // making api call to mongodb
   async () => {
-    const { data } = await api.fetchListings();
-    console.log(data);
+    const { data } = await api.getListings();
     return data;
   }
 );
@@ -17,7 +16,6 @@ export const createListing = createAsyncThunk(
   "listings/createListing",
   async (newListing) => {
     const { data } = await api.createListing(newListing);
-    console.log(data);
     return data;
   }
 );
@@ -39,7 +37,6 @@ export const listingsSlice = createSlice({
     [getListings.fulfilled]: (state, action) => {
       state.pending = false;
       state.listings = action.payload.data;
-      console.log(action.payload);
     },
   },
 });

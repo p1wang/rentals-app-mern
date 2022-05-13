@@ -6,5 +6,5 @@ const API = axios.create({ baseURL: "http://localhost:5001" });
 //   baseURL: "https://dauntless-locker-mern-app.herokuapp.com",
 // });
 
-export const fetchListings = () => API.get("/listings");
+export const getListings = () => API.get("/listings");
 export const createListing = (newListing) => API.post("/listings", newListing);
