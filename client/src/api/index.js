@@ -7,4 +7,8 @@ const API = axios.create({ baseURL: "http://localhost:5001" });
 // });
 
 export const getListings = () => API.get("/listings");
+export const getListing = (id) => API.get(`/listings/${id}`);
 export const createListing = (newListing) => API.post("/listings", newListing);
+export const deleteListing = (id) => API.delete(`/listings/${id}`);
+export const updateListing = (id, updatedListing) =>
+  API.patch(`/listings/${id}`, updatedListing);

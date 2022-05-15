@@ -13,7 +13,7 @@ const NavbarComp = () => {
   return (
     <>
       <Navbar bg="light" expand="lg" className="mb-3">
-        <Container fluid>
+        <Container>
           <Navbar.Brand href="/">Rentals</Navbar.Brand>
           <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-lg`} />
           <Navbar.Offcanvas
@@ -27,7 +27,7 @@ const NavbarComp = () => {
               </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-              <Form className="d-flex ">
+              {/* <Form className="d-flex ">
                 <FormControl
                   type="search"
                   placeholder="Search"
@@ -36,7 +36,7 @@ const NavbarComp = () => {
                   style={{ width: "500px" }}
                 />
                 <Button variant="outline-success">Search</Button>
-              </Form>
+              </Form> */}
               <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link href="/auth" className="text-dark">
                   Register

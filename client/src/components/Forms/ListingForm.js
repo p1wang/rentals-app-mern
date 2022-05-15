@@ -1,53 +1,87 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 
-import { createListing } from "../redux/listingsSlice";
+import { Context } from "../../App";
+import { createListing, updateListing } from "../../redux/listingsSlice";
 
-const ListingForm = () => {
-  const { register, handleSubmit, reset } = useForm();
+const ListingForm = ({ setShowEditForm, isUpdate }) => {
+  const { currentListing } = useContext(Context);
   const dispatch = useDispatch();
-  // const [base64Images, setBase64Images] = useState();
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: {
+      unitType: isUpdate ? currentListing.unitType : "",
+      bedrooms: isUpdate ? currentListing.bedrooms : "",
+      agreementType: isUpdate ? currentListing.agreementType : "",
+      postalCode: isUpdate ? currentListing.postalCode : "",
+      price: isUpdate ? currentListing.price : "",
+      images: [],
+      description: isUpdate ? currentListing.description : "",
+    },
+  });
 
-  // const convertToBase64 = (images) => {
-  //   const reader = new FileReader();
-
-  //   reader.onloadend = () => {
-  //     setBase64Images(reader.result.toString());
-  //   };
-
-  //   reader.readAsDataURL(images);
-  // };
-
-  // const onSubmit = (data) => {
-  //   convertToBase64(data.images[0]);
-  //   dispatch(createListing({ ...data, images: base64Images }));
-  // };
-
-  const convertToBase64 = (images) => {
-    const reader = new FileReader();
-
+  /////////////////////////////////////////////////////////////////
+  const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
-      reader.onloadend = () => {
-        resolve(reader.result.toString());
-      };
-
-      reader.readAsDataURL(images);
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.readAsDataURL(file);
     });
   };
 
-  const onSubmit = async (data) => {
-    dispatch(
-      createListing({ ...data, images: await convertToBase64(data.images[0]) })
+  const onSubmit = (data) => {
+    convertToBase64(data.images[0]).then((convertedImages) =>
+      isUpdate
+        ? dispatch(
+            updateListing({
+              id: currentListing._id,
+              updatedListing: { ...data, images: convertedImages },
+            })
+          )
+        : dispatch(
+            createListing({
+              newListing: { ...data, images: convertedImages },
+            })
+          )
     );
+    isUpdate && setShowEditForm(false);
     reset();
   };
+
+  // console.log(`is update? ${isUpdate}`);
+  // ////////////////////////// Multiple /////////////////////////////////
+
+  // const convertToBase64 = (file) => {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.onload = () => resolve(reader.result);
+  //     reader.readAsDataURL(file);
+  //   });
+  // };
+
+  // const onSubmit = (data) => {
+  //   let convertedFiles = [];
+  //   Object.values(data.images).forEach((file) => {
+  //     convertToBase64(file).then((convertedFile) => {
+  //       convertedFiles.push(convertedFile);
+  //     });
+  //   });
+
+  //   dispatch(
+  //     createListing({ newListing: { ...data, images: convertedFiles } })
+  //   );
+
+  //   reset();
+  // };
 
   return (
     <Form
       onSubmit={handleSubmit(onSubmit)}
-      style={{ margin: "auto", maxWidth: "500px", marginTop: "200px" }}
+      style={{
+        margin: "auto",
+        maxWidth: "500px",
+      }}
     >
       {/* unit type */}
       <div className="row">
@@ -125,7 +159,7 @@ const ListingForm = () => {
       {/* file upload */}
       <Form.Group controlId="formFileMultiple" className="mb-3">
         <Form.Label>Multiple files input example</Form.Label>
-        <Form.Control type="file" multiple {...register("images")} />
+        <Form.Control type="file" required multiple {...register("images")} />
       </Form.Group>
       {/* description */}
       <Form.Group className="mb-3" controlId="description">
@@ -135,12 +169,13 @@ const ListingForm = () => {
           required
           as="textarea"
           rows={4}
+          maxLength="200"
           placeholder="Describe a bit more about your unit ..."
         />
       </Form.Group>
       {/* submit */}
       <Button variant="primary" type="submit" className="d-block ms-auto">
-        Submit
+        {isUpdate ? "Update" : "Submit"}
       </Button>
     </Form>
   );

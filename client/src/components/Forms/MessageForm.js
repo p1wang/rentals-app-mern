@@ -2,7 +2,7 @@ import React from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 
-const MessageForm = ({ show, setShow }) => {
+const MessageForm = ({ showMessageForm, setShowMessageForm }) => {
   const { register, handleSubmit, reset } = useForm();
 
   const onSubmit = (data) => {
@@ -11,7 +11,11 @@ const MessageForm = ({ show, setShow }) => {
 
   return (
     <>
-      <Modal centered show={show} onHide={() => setShow(false)}>
+      <Modal
+        centered
+        show={showMessageForm}
+        onHide={() => setShowMessageForm(false)}
+      >
         <Modal.Header closeButton>
           <Modal.Title>Send an inquiry</Modal.Title>
         </Modal.Header>

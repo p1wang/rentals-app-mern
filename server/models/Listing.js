@@ -7,7 +7,7 @@ const listingSchema = mongoose.Schema({
   postalCode: String,
   price: String,
   description: String,
-  images: String,
+  images: [String],
   createdAt: {
     type: Date,
     default: new Date(),

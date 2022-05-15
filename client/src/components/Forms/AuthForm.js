@@ -18,7 +18,7 @@ const AuthForm = () => {
 
   return (
     <Form
-      style={{ margin: "auto", maxWidth: "350px", marginTop: "200px" }}
+      style={{ margin: "auto", maxWidth: "350px" }}
       onSubmit={handleSubmit(onSubmit)}
     >
       <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -95,7 +95,7 @@ const AuthForm = () => {
           <Button
             variant="light"
             className="shadow-none m-0 p-0 border-0 bg-transparent "
-            onClick={(e) => {
+            onClick={() => {
               setIsSignUp(false);
             }}
           >
@@ -105,7 +105,7 @@ const AuthForm = () => {
           <Button
             variant="light"
             className="shadow-none m-0 p-0 border-0 bg-transparent "
-            onClick={(e) => {
+            onClick={() => {
               setIsSignUp(true);
             }}
           >
