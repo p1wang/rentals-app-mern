@@ -7,13 +7,15 @@ const listingSchema = mongoose.Schema({
   postalCode: String,
   price: String,
   description: String,
-  images: [String],
+  images: { type: [String], default: [] },
+  creator: String,
+  likes: { type: [String], default: [] },
   createdAt: {
     type: Date,
     default: new Date(),
   },
 });
 
-const Listing = mongoose.model("Listing", listingSchema);
+const ListingModel = mongoose.model("Listing", listingSchema);
 
-export default Listing;
+export default ListingModel;

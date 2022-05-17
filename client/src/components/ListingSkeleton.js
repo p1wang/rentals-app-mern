@@ -4,7 +4,7 @@ import { Card, Placeholder, Row, Col } from "react-bootstrap";
 const ListingSkeleton = ({ count }) => {
   return (
     <Row className="gy-3">
-      {[...Array(8)].map((item, index) => (
+      {[...Array(count)].map((item, index) => (
         <Col key={index} lg={4} md={6}>
           <Card>
             <Card.Body>

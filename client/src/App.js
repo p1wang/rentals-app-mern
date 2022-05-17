@@ -1,6 +1,7 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { createContext, useEffect, useState } from "react";
+import decode from "jwt-decode";
 
 import "./App.css";
 import NavbarComp from "./components/NavbarComp";
@@ -11,20 +12,43 @@ import ListingDetails from "./components/ListingDetails";
 import DashboardPage from "./pages/DashboardPage";
 import NewListingPage from "./pages/NewListingPage";
 import AuthPage from "./pages/AuthPage";
+import { useDispatch } from "react-redux";
+import { setLogout, setUser } from "./redux/authSlice";
 
 export const Context = createContext();
 
 function App() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const user = JSON.parse(localStorage.getItem("profile"));
   const [currentListing, setCurrentListing] = useState("");
   const [alertConfigs, setAlertConfigs] = useState({
-    showAlert: false,
+    show: false,
     alertType: "",
     alertMessage: "",
   });
 
+  useEffect(() => {
+    dispatch(setUser(user));
+  }, []);
+
+  useEffect(() => {
+    const token = user?.token;
+    if (token) {
+      const decodedToken = decode(token);
+      console.log(decodedToken);
+
+      if (decodedToken.exp < new Date().getTime() / 1000) {
+        dispatch(setLogout());
+        navigate("/", { replace: true });
+      }
+    }
+  }, [location]);
+
   return (
     <>
-      {alertConfigs.showAlert && (
+      {alertConfigs.show && (
         <div
           className={`alert alert-${alertConfigs.alertType} text-center`}
           role="alert"
@@ -41,7 +65,7 @@ function App() {
         }}
       >
         <NavbarComp />
-        <Container style={{ marginTop: "5vh" }}>
+        <Container className="mt-5 mb-5">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/dashboard" element={<DashboardPage />} />

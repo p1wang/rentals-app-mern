@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { signIn, signUp } from "../../redux/authSlice";
 
 const AuthForm = () => {
   const [isSignUp, setIsSignUp] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -12,8 +18,12 @@ const AuthForm = () => {
     reset,
   } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = (formData) => {
+    isSignUp
+      ? dispatch(signUp({ formData, navigate }))
+      : dispatch(signIn({ formData, navigate }));
     reset();
+    navigate("/");
   };
 
   return (

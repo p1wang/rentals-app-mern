@@ -1,13 +1,14 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Context } from "../../App";
 import { createListing, updateListing } from "../../redux/listingsSlice";
 
 const ListingForm = ({ setShowEditForm, isUpdate }) => {
-  const { currentListing } = useContext(Context);
+  const { currentListing, alertConfigs, setAlertConfigs } = useContext(Context);
+  const { status } = useSelector((state) => state.listings);
   const dispatch = useDispatch();
   const { register, handleSubmit, reset } = useForm({
     defaultValues: {
@@ -30,22 +31,46 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
     });
   };
 
-  const onSubmit = (data) => {
-    convertToBase64(data.images[0]).then((convertedImages) =>
+  const onSubmit = (formData) => {
+    convertToBase64(formData.images[0]).then((convertedImages) =>
       isUpdate
         ? dispatch(
             updateListing({
               id: currentListing._id,
-              updatedListing: { ...data, images: convertedImages },
+              updatedListing: { ...formData, images: convertedImages },
             })
           )
         : dispatch(
             createListing({
-              newListing: { ...data, images: convertedImages },
+              newListing: { ...formData, images: convertedImages },
             })
           )
     );
+
     isUpdate && setShowEditForm(false);
+
+    console.log(isUpdate);
+    console.log(status);
+
+    if (isUpdate && status === "fulfilled") {
+      setAlertConfigs({
+        show: true,
+        alertType: "success",
+        alertMessage: "The listing was successfully updated!",
+      });
+      setTimeout(() => {
+        setAlertConfigs({ ...alertConfigs, show: false });
+      }, 2000);
+    } else if (status === "fulfilled") {
+      setAlertConfigs({
+        show: true,
+        alertType: "success",
+        alertMessage: "The listing was successfully created!",
+      });
+      setTimeout(() => {
+        setAlertConfigs({ ...alertConfigs, show: false });
+      }, 2000);
+    }
     reset();
   };
 
@@ -169,7 +194,7 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
           required
           as="textarea"
           rows={4}
-          maxLength="200"
+          maxLength="280"
           placeholder="Describe a bit more about your unit ..."
         />
       </Form.Group>

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Listing from "./Listing";
 import { getListings } from "../redux/listingsSlice";
-import ListingSkeleton from "./Skeletons/ListingSkeleton";
+import ListingSkeleton from "./ListingSkeleton";
 import EditListingForm from "./Forms/EditListingForm";
 
 const Listings = () => {
@@ -16,9 +16,9 @@ const Listings = () => {
 
   useEffect(() => {
     dispatch(getListings());
-  }, [dispatch]);
+  }, []);
 
-  if (status === "pending") return <ListingSkeleton count={8} />;
+  if (status === "pending") return <ListingSkeleton count={9} />;
 
   return (
     <>
@@ -35,7 +35,6 @@ const Listings = () => {
           <Col key={item._id} lg={4} md={6}>
             <Listing
               listing={item}
-              status={status}
               setShowMessageForm={setShowMessageForm}
               setShowEditForm={setShowEditForm}
             />

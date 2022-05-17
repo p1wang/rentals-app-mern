@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 const MessageForm = ({ showMessageForm, setShowMessageForm }) => {
   const { register, handleSubmit, reset } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = (formData) => {
     reset();
   };
 

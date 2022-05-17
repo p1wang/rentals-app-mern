@@ -19,9 +19,9 @@ export const getListings = createAsyncThunk(
 );
 
 export const getListing = createAsyncThunk(
-  "listings/getListings",
+  "listings/getListing",
   async ({ id }) => {
-    const { data } = await api.getListings(id);
+    const { data } = await api.getListing(id);
     return data;
   }
 );
@@ -30,7 +30,6 @@ export const deleteListing = createAsyncThunk(
   "listings/deleteListing",
   async ({ id }) => {
     const { data } = await api.deleteListing(id);
-    console.log(data);
     return data;
   }
 );
@@ -39,20 +38,25 @@ export const updateListing = createAsyncThunk(
   "listings/updateListing",
   async ({ id, updatedListing }) => {
     const { data } = await api.updateListing(id, updatedListing);
-    console.log(`updated data ${data}`);
+    return data;
+  }
+);
+
+export const likeListing = createAsyncThunk(
+  "listings/likeListing",
+  async ({ id }) => {
+    const { data } = await api.likeListing(id);
     return data;
   }
 );
 
 export const listingsSlice = createSlice({
   name: "listings",
-  // initial state
   initialState: {
+    listing: {},
     listings: [],
     status: "idle",
   },
-  // reducer object
-  reducers: {},
   extraReducers: {
     // createListing
     [createListing.pending]: (state) => {
@@ -63,7 +67,7 @@ export const listingsSlice = createSlice({
     },
     [createListing.fulfilled]: (state, action) => {
       state.status = "fulfilled";
-      state.listings = [...state.listings, action.payload.data];
+      state.listings = [...state.listings, action.payload];
     },
     // getListings
     [getListings.pending]: (state) => {
@@ -74,9 +78,9 @@ export const listingsSlice = createSlice({
     },
     [getListings.fulfilled]: (state, action) => {
       state.status = "fulfilled";
-      state.listings = action.payload.data;
+      state.listings = action.payload;
     },
-    //getListing
+    // getListing
     [getListing.pending]: (state) => {
       state.status = "pending";
     },
@@ -85,7 +89,7 @@ export const listingsSlice = createSlice({
     },
     [getListing.fulfilled]: (state, action) => {
       state.status = "fulfilled";
-      state.listings = action.payload.data;
+      state.listing = action.payload;
     },
     // deleteListing
     [deleteListing.pending]: (state) => {
@@ -96,9 +100,11 @@ export const listingsSlice = createSlice({
     },
     [deleteListing.fulfilled]: (state, action) => {
       state.status = "fulfilled";
-      state.listings = action.payload.data;
+      state.listings = state.listings.filter(
+        (listing) => listing._id !== action.payload
+      );
     },
-    //updateListing
+    // updateListing
     [updateListing.pending]: (state) => {
       state.status = "pending";
     },
@@ -107,11 +113,24 @@ export const listingsSlice = createSlice({
     },
     [updateListing.fulfilled]: (state, action) => {
       state.status = "fulfilled";
-      state.listings = action.payload.data;
+      state.listings = state.listings.map((listing) =>
+        listing._id === action.payload._id ? action.payload : listing
+      );
+    },
+    // likeListing
+    [likeListing.pending]: (state) => {
+      state.status = "pending";
+    },
+    [likeListing.rejected]: (state) => {
+      state.status = "rejected";
+    },
+    [likeListing.fulfilled]: (state, action) => {
+      state.status = "fulfilled";
+      state.listings = state.listings.map((listing) =>
+        listing._id === action.payload._id ? action.payload : listing
+      );
     },
   },
 });
-
-// export const {} = listingsSlice.actions;
 
 export default listingsSlice.reducer;

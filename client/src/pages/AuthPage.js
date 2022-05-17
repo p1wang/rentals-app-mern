@@ -3,7 +3,7 @@ import AuthForm from "../components/Forms/AuthForm";
 
 const AuthPage = () => {
   return (
-    <div style={{ marginTop: "200px" }}>
+    <div style={{ marginTop: "150px" }}>
       <AuthForm />
     </div>
   );

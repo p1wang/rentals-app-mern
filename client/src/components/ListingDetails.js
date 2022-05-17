@@ -1,5 +1,8 @@
-import React from "react";
-import { Carousel } from "react-bootstrap";
+import React, { useEffect } from "react";
+import { Carousel, Col, Container, Row, Stack } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { getListing } from "../redux/listingsSlice";
 
 const images = [
   {
@@ -29,6 +32,16 @@ const images = [
 ];
 
 const ListingDetails = () => {
+  const { listing } = useSelector((state) => state.listings);
+  const dispatch = useDispatch();
+  let params = useParams();
+
+  useEffect(() => {
+    dispatch(getListing({ id: params.id }));
+  }, []);
+
+  console.log(listing);
+
   return (
     <>
       <Carousel>
@@ -47,7 +60,35 @@ const ListingDetails = () => {
           </Carousel.Item>
         ))}
       </Carousel>
-      {/* <Stack gap={2} className="col-md-5 mx-auto"></Stack> */}
+
+      <Container className="border border-warning  mt-5">
+        <Row>
+          <Col>
+            <p className="bg-light border fs-2">{`$${listing.price}`}</p>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <p className="bg-light border">{listing.postalCode}</p>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <p className="bg-light border">{listing.description}</p>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <p className="bg-light border">{listing.unitType}</p>
+          </Col>
+          <Col>
+            <p className="bg-light border">{listing.agreementType}</p>
+          </Col>
+          <Col>
+            <p className="bg-light border">{listing.bedrooms}</p>
+          </Col>
+        </Row>
+      </Container>
     </>
   );
 };
