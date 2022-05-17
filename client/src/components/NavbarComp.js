@@ -21,7 +21,7 @@ const NavbarComp = () => {
 
   const handleLogout = () => {
     dispatch(setLogout());
-    navigate("/", { replace: true });
+    navigate("/auth", { replace: true });
   };
 
   const handlePostAd = () => {

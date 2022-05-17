@@ -1,5 +1,5 @@
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { Container } from "react-bootstrap";
+import { Alert, Container } from "react-bootstrap";
 import { createContext, useEffect, useState } from "react";
 import decode from "jwt-decode";
 
@@ -49,12 +49,12 @@ function App() {
   return (
     <>
       {alertConfigs.show && (
-        <div
-          className={`alert alert-${alertConfigs.alertType} text-center`}
-          role="alert"
+        <Alert
+          variant={alertConfigs.alertType}
+          className="sticky-top text-center"
         >
           {alertConfigs.alertMessage}
-        </div>
+        </Alert>
       )}
       <Context.Provider
         value={{

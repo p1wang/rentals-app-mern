@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Context } from "../../App";
 import { signIn, signUp } from "../../redux/authSlice";
 
 const AuthForm = () => {
+  const { user, status } = useSelector((state) => ({ ...state.auth }));
+  const { alertConfigs, setAlertConfigs } = useContext(Context);
   const [isSignUp, setIsSignUp] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -22,8 +25,21 @@ const AuthForm = () => {
     isSignUp
       ? dispatch(signUp({ formData, navigate }))
       : dispatch(signIn({ formData, navigate }));
-    reset();
+
+    if (status === "fulfilled") {
+      setAlertConfigs({
+        show: true,
+        alertType: "success",
+        alertMessage: `Welcome, ${user?.result.name}`,
+      });
+
+      setTimeout(() => {
+        setAlertConfigs({ ...alertConfigs, show: false });
+      }, 2000);
+    }
+
     navigate("/");
+    reset();
   };
 
   return (

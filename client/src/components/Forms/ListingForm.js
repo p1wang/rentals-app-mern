@@ -71,7 +71,7 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
         setAlertConfigs({ ...alertConfigs, show: false });
       }, 2000);
     }
-    reset();
+    // reset();
   };
 
   // console.log(`is update? ${isUpdate}`);

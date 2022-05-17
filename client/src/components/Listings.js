@@ -16,9 +16,8 @@ const Listings = () => {
 
   useEffect(() => {
     dispatch(getListings());
+    if (status === "pending") return <ListingSkeleton count={9} />;
   }, []);
-
-  if (status === "pending") return <ListingSkeleton count={9} />;
 
   return (
     <>
@@ -35,6 +34,7 @@ const Listings = () => {
           <Col key={item._id} lg={4} md={6}>
             <Listing
               listing={item}
+              status={status}
               setShowMessageForm={setShowMessageForm}
               setShowEditForm={setShowEditForm}
             />
