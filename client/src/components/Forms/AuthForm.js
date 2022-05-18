@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +13,20 @@ const AuthForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (user && status === "fulfilled") {
+      setAlertConfigs({
+        show: true,
+        alertType: "success",
+        alertMessage: `Welcome, ${user?.result.name}`,
+      });
+
+      setTimeout(() => {
+        setAlertConfigs({ ...alertConfigs, show: false });
+      }, 2000);
+    }
+  }, [user]);
+
   const {
     register,
     handleSubmit,
@@ -26,19 +40,17 @@ const AuthForm = () => {
       ? dispatch(signUp({ formData, navigate }))
       : dispatch(signIn({ formData, navigate }));
 
-    if (status === "fulfilled") {
-      setAlertConfigs({
-        show: true,
-        alertType: "success",
-        alertMessage: `Welcome, ${user?.result.name}`,
-      });
+    // if (status === "fulfilled") {
+    //   setAlertConfigs({
+    //     show: true,
+    //     alertType: "success",
+    //     alertMessage: `Welcome, ${user?.result.name}`,
+    //   });
 
-      setTimeout(() => {
-        setAlertConfigs({ ...alertConfigs, show: false });
-      }, 2000);
-    }
-
-    navigate("/");
+    //   setTimeout(() => {
+    //     setAlertConfigs({ ...alertConfigs, show: false });
+    //   }, 2000);
+    // }
     reset();
   };
 

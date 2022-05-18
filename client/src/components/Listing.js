@@ -1,28 +1,23 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import Moment from "react-moment";
-import { Card, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Card, Button, Offcanvas } from "react-bootstrap";
 import { deleteListing, likeListing } from "../redux/listingsSlice";
 import { useDispatch, useSelector } from "react-redux";
-
 import { AiOutlineStar } from "react-icons/ai";
 import { BsBoxArrowRight } from "react-icons/bs";
 
 import { Context } from "../App";
+import ListingDetails from "./ListingDetails";
 
 const Listing = ({ listing, status, setShowEditForm, setShowMessageForm }) => {
   const { user } = useSelector((state) => ({ ...state.auth }));
-  const [isLikedByUser, setIsLikedByUser] = useState(false);
-  const { currentListing, setCurrentListing, alertConfigs, setAlertConfigs } =
+  const { setCurrentListing, alertConfigs, setAlertConfigs } =
     useContext(Context);
+  const [show, setShow] = useState(false);
   const dispatch = useDispatch();
   const isCreator = user?.result._id === listing?.creator;
 
-  useEffect(() => {
-    user
-      ? setIsLikedByUser(listing.likes.includes(user?.result._id))
-      : setIsLikedByUser(false);
-  }, [listing.likes]);
+  const handleClose = () => setShow(false);
 
   const handleLike = () => {
     if (!user) {
@@ -36,9 +31,6 @@ const Listing = ({ listing, status, setShowEditForm, setShowMessageForm }) => {
       }, 2000);
     } else {
       dispatch(likeListing({ id: listing._id }));
-      if (status === "fulfilled") {
-        setIsLikedByUser(listing.likes.includes(user?.result._id));
-      }
     }
   };
 
@@ -63,14 +55,17 @@ const Listing = ({ listing, status, setShowEditForm, setShowMessageForm }) => {
   const handleUpdate = () => {
     setShowEditForm(true);
     setCurrentListing(listing);
-    window.scrollTo(0, 0);
-    console.log(currentListing);
+  };
+
+  const handleViewDetails = () => {
+    setCurrentListing(listing);
+    setShow(true);
   };
 
   return (
     <>
       <Card>
-        {isLikedByUser ? (
+        {listing.likes.includes(user?.result._id) ? (
           <AiOutlineStar
             size={42}
             style={{
@@ -103,24 +98,16 @@ const Listing = ({ listing, status, setShowEditForm, setShowMessageForm }) => {
           <small className="d-block text-muted text-end">
             <Moment fromNow>{listing.createdAt}</Moment>
           </small>
-          <Card.Title>{listing.unitType}</Card.Title>
-          <Card.Text
-            style={{
-              height: "10ch",
-              overflow: "scroll",
-            }}
-          >
-            {listing.description}
-          </Card.Text>
+          <Card.Title className="fs-3">{`$${listing.price}`}</Card.Title>
+          <div className="d-flex justify-content-around mt-2 fw-light fst-italic">
+            <Card.Text>{listing.bedrooms} Bed</Card.Text>
+            <Card.Text>{listing.bathrooms} Bath</Card.Text>
+            <Card.Text>{listing.parkings} Parking</Card.Text>
+          </div>
+          <Card.Text>137 Galbraith Cres, Markham, ON L3S 1H8</Card.Text>
         </Card.Body>
 
-        <Card.Footer
-          className={
-            isCreator
-              ? "d-flex justify-content-between"
-              : "d-flex justify-content-end"
-          }
-        >
+        <Card.Footer className={"d-flex justify-content-between"}>
           {isCreator && (
             <>
               <Button variant="outline-danger" onClick={handleDelete}>
@@ -135,12 +122,23 @@ const Listing = ({ listing, status, setShowEditForm, setShowMessageForm }) => {
           <Button variant="outline-primary" onClick={handleMessage}>
             Message
           </Button>
-          <Link
-            to={`listings/${listing._id}`}
-            className="d-flex align-items-center btn btn-outline-success"
-          >
+          <Button onClick={handleViewDetails} variant="outline-primary">
             <BsBoxArrowRight size={24} />
-          </Link>
+          </Button>
+          <Offcanvas
+            show={show}
+            onHide={handleClose}
+            // scroll={true}
+            // backdrop={false}
+            style={{ minWidth: "60vw" }}
+          >
+            <Offcanvas.Header closeButton>
+              <Offcanvas.Title>Offcanvas</Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body>
+              <ListingDetails />
+            </Offcanvas.Body>
+          </Offcanvas>
         </Card.Footer>
       </Card>
     </>

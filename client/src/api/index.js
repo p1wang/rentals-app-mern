@@ -6,6 +6,7 @@ const API = axios.create({ baseURL: "http://localhost:5001" });
 //   baseURL: "https://dauntless-locker-mern-app.herokuapp.com",
 // });
 
+// adds req.userID to the request
 API.interceptors.request.use((req) => {
   if (localStorage.getItem("profile")) {
     req.headers.Authorization = `Bearer ${

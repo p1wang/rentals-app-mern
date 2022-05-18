@@ -14,6 +14,8 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
     defaultValues: {
       unitType: isUpdate ? currentListing.unitType : "",
       bedrooms: isUpdate ? currentListing.bedrooms : "",
+      bathrooms: isUpdate ? currentListing.bathrooms : "",
+      parkings: isUpdate ? currentListing.parkings : "",
       agreementType: isUpdate ? currentListing.agreementType : "",
       postalCode: isUpdate ? currentListing.postalCode : "",
       price: isUpdate ? currentListing.price : "",
@@ -49,9 +51,6 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
 
     isUpdate && setShowEditForm(false);
 
-    console.log(isUpdate);
-    console.log(status);
-
     if (isUpdate && status === "fulfilled") {
       setAlertConfigs({
         show: true,
@@ -71,10 +70,9 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
         setAlertConfigs({ ...alertConfigs, show: false });
       }, 2000);
     }
-    // reset();
+    reset();
   };
 
-  // console.log(`is update? ${isUpdate}`);
   // ////////////////////////// Multiple /////////////////////////////////
 
   // const convertToBase64 = (file) => {
@@ -143,6 +141,40 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
           </Form.Select>
         </Form.Group>
       </div>
+
+      {/* bathrooms */}
+      <div className="row">
+        <Form.Group className="mb-3 col" controlId="bathrooms">
+          <Form.Label>Bathrooms</Form.Label>
+          <Form.Select
+            {...register("bathrooms")}
+            required
+            aria-label="Default select example"
+            autoFocus
+          >
+            <option value="">Select</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="2+">2+</option>
+          </Form.Select>
+        </Form.Group>
+        {/* parkings */}
+        <Form.Group className="mb-3 col" controlId="parkings">
+          <Form.Label>Parkings</Form.Label>
+          <Form.Select
+            {...register("parkings")}
+            required
+            aria-label="Default select example"
+          >
+            <option value="">Select</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="2+">2+</option>
+          </Form.Select>
+        </Form.Group>
+      </div>
+
       {/* agreement type */}
       <div className="row">
         <Form.Group className="mb-3 col" controlId="agreementType">

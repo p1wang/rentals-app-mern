@@ -7,6 +7,7 @@ import Listing from "./Listing";
 import { getListings } from "../redux/listingsSlice";
 import ListingSkeleton from "./ListingSkeleton";
 import EditListingForm from "./Forms/EditListingForm";
+import PaginationComp from "./PaginationComp";
 
 const Listings = () => {
   const [showMessageForm, setShowMessageForm] = useState(false);
@@ -29,7 +30,7 @@ const Listings = () => {
         showEditForm={showEditForm}
         setShowEditForm={setShowEditForm}
       />
-      <Row className="gy-3">
+      <Row className="g-4">
         {listings.map((item) => (
           <Col key={item._id} lg={4} md={6}>
             <Listing
@@ -41,6 +42,7 @@ const Listings = () => {
           </Col>
         ))}
       </Row>
+      {status === "fulfilled" && <PaginationComp />}
     </>
   );
 };

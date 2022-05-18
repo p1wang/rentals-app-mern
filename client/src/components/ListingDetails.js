@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
-import { Carousel, Col, Container, Row, Stack } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { getListing } from "../redux/listingsSlice";
+import React, { useContext } from "react";
+import { Carousel, Col, Container, Row } from "react-bootstrap";
+
+import { Context } from "../App";
 
 const images = [
   {
@@ -32,15 +31,7 @@ const images = [
 ];
 
 const ListingDetails = () => {
-  const { listing } = useSelector((state) => state.listings);
-  const dispatch = useDispatch();
-  let params = useParams();
-
-  useEffect(() => {
-    dispatch(getListing({ id: params.id }));
-  }, []);
-
-  console.log(listing);
+  const { currentListing } = useContext(Context);
 
   return (
     <>
@@ -61,31 +52,48 @@ const ListingDetails = () => {
         ))}
       </Carousel>
 
-      <Container className="border border-warning  mt-5">
-        <Row>
+      <Container className="mt-5">
+        <Row className="m-2">
           <Col>
-            <p className="bg-light border fs-2">{`$${listing.price}`}</p>
+            <p className="fs-2">{`$${currentListing.price}`}</p>
           </Col>
         </Row>
-        <Row>
+        <Row className="m-2 border-bottom">
           <Col>
-            <p className="bg-light border">{listing.postalCode}</p>
+            <span className="fs-5 ">Postal Code:</span>
+            <p className="fw-light">{currentListing.postalCode}</p>
           </Col>
         </Row>
-        <Row>
+        <Row className="m-2">
           <Col>
-            <p className="bg-light border">{listing.description}</p>
+            <span className="fs-5 ">Unit Type:</span>
+            <p className="fw-light">{currentListing.unitType}</p>
+          </Col>
+          <Col>
+            <span className="fs-5 ">Agreement Type:</span>
+            <p className="fw-light">{currentListing.agreementType}</p>
           </Col>
         </Row>
-        <Row>
+        <Row className="m-2 border-bottom">
           <Col>
-            <p className="bg-light border">{listing.unitType}</p>
+            <span className="fs-5 ">Unit Specs:</span>
+            <div className="d-flex justify-content-around">
+              <p className="fw-light">{`Bedroom x ${currentListing.bedrooms}`}</p>
+              <p className="fw-light">{`Bathroom x ${currentListing.bathrooms}`}</p>
+              <p className="fw-light">{`Parking x ${currentListing.parkings}`}</p>
+            </div>
           </Col>
+        </Row>
+        <Row className="m-2 ">
           <Col>
-            <p className="bg-light border">{listing.agreementType}</p>
+            <span className="fs-5 ">Description:</span>
+            <p className="fw-light">{currentListing.description}</p>
           </Col>
+        </Row>
+        <Row className="m-2 border-bottom">
           <Col>
-            <p className="bg-light border">{listing.bedrooms}</p>
+            <span className="fs-5 ">Contact:</span>
+            <p className="fw-light">{currentListing.creatorEmail}</p>
           </Col>
         </Row>
       </Container>

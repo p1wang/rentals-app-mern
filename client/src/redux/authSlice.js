@@ -5,20 +5,18 @@ import * as api from "../api";
 export const signUp = createAsyncThunk(
   "auth/signUp",
   async ({ formData, navigate }) => {
-    const response = await api.signUp(formData);
+    const { data } = await api.signUp(formData);
     navigate("/");
-    console.log(response.data);
-    return response.data;
+    return data;
   }
 );
 
 export const signIn = createAsyncThunk(
   "auth/signIn",
   async ({ formData, navigate }) => {
-    const response = await api.signIn(formData);
+    const { data } = await api.signIn(formData);
     navigate("/");
-    console.log(response.data);
-    return response.data;
+    return data;
   }
 );
 

@@ -13,6 +13,7 @@ const auth = async (req, res, next) => {
       // email auth
       decodedData = jwt.verify(token, secret);
       req.userId = decodedData?.id;
+      req.userEmail = decodedData?.email;
     } else {
       // google auth
       decodedData = jwt.decode(token);

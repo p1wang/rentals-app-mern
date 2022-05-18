@@ -4,9 +4,9 @@ import {
   Offcanvas,
   Container,
   Nav,
-  Form,
-  FormControl,
   Button,
+  Dropdown,
+  DropdownButton,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -42,7 +42,7 @@ const NavbarComp = () => {
 
   return (
     <>
-      <Navbar bg="light" expand="lg" className="mb-3">
+      <Navbar bg="light" expand="lg" className="mb-3 py-3">
         <Container>
           <Navbar.Brand href="/">Rentals</Navbar.Brand>
           <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-lg`} />
@@ -57,23 +57,11 @@ const NavbarComp = () => {
               </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-              {/* <Form className="d-flex ">
-                <FormControl
-                  type="search"
-                  placeholder="Search"
-                  aria-label="Search"
-                  className="me-2"
-                  style={{ width: "500px" }}
-                />
-                <Button variant="outline-success">Search</Button>
-              </Form> */}
-
-              {/* Add a filter search bar instead of regular search bar */}
               <Nav className="justify-content-end flex-grow-1 gap-3">
                 {user ? (
                   <>
                     <Navbar.Text>
-                      Hi, <span>{user?.result?.name}</span>
+                      Hi, <span>{user?.result.name}</span>
                     </Navbar.Text>
                     <Button onClick={handleLogout} variant="primary">
                       Logout
@@ -84,7 +72,11 @@ const NavbarComp = () => {
                     Signin
                   </Nav.Link>
                 )}
-
+                <DropdownButton id="dropdown-basic-button" title="Settings">
+                  <Dropdown.Item href="#/action-1">THD</Dropdown.Item>
+                  <Dropdown.Item href="#/action-2">Saved</Dropdown.Item>
+                  <Dropdown.Item href="#/action-3">Log out</Dropdown.Item>
+                </DropdownButton>
                 <Button variant="success" onClick={handlePostAd}>
                   Post ad
                 </Button>

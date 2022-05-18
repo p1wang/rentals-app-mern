@@ -6,7 +6,6 @@ import mongoose from "mongoose";
 export const createListing = async (req, res) => {
   const listing = req.body;
 
-  console.log(req.userId);
   try {
     const existingUser = await UserModel.findOne({ _id: req.userId });
 
@@ -16,6 +15,7 @@ export const createListing = async (req, res) => {
     const newListing = new ListingModel({
       ...listing,
       creator: req.userId,
+      creatorEmail: req.userEmail,
       createdAt: new Date().toISOString(),
     });
     await newListing.save();
@@ -101,8 +101,6 @@ export const updateListing = async (req, res) => {
 // like listing
 export const likeListing = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
-  console.log(req.userId);
 
   try {
     const existingUser = await UserModel.findOne({ _id: req.userId });
@@ -116,9 +114,7 @@ export const likeListing = async (req, res) => {
 
     const oldListing = await ListingModel.findById(id);
 
-    if (oldListing.length === 0) {
-      oldListing.likes.push(req.userId);
-    } else if (oldListing.likes.includes(req.userId)) {
+    if (oldListing.likes.includes(req.userId)) {
       oldListing.likes = oldListing.likes.filter((id) => id !== req.userId);
     } else {
       oldListing.likes.push(req.userId);
@@ -132,7 +128,6 @@ export const likeListing = async (req, res) => {
     //   oldListing.likes.push(req.userId);
     // }
 
-    console.log(oldListing);
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res
         .status(404)
