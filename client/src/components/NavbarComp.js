@@ -63,20 +63,22 @@ const NavbarComp = () => {
                     <Navbar.Text>
                       Hi, <span>{user?.result.name}</span>
                     </Navbar.Text>
-                    <Button onClick={handleLogout} variant="primary">
+                    {/* <Button onClick={handleLogout} variant="primary">
                       Logout
-                    </Button>
+                    </Button> */}
+                    <DropdownButton id="dropdown-basic-button" title="Settings">
+                      <Dropdown.Item href="/dashboard">Dashboard</Dropdown.Item>
+                      <Dropdown.Item href="#" onClick={handleLogout}>
+                        Log out
+                      </Dropdown.Item>
+                    </DropdownButton>
                   </>
                 ) : (
                   <Nav.Link href="/auth" className="text-dark">
                     Signin
                   </Nav.Link>
                 )}
-                <DropdownButton id="dropdown-basic-button" title="Settings">
-                  <Dropdown.Item href="#/action-1">THD</Dropdown.Item>
-                  <Dropdown.Item href="#/action-2">Saved</Dropdown.Item>
-                  <Dropdown.Item href="#/action-3">Log out</Dropdown.Item>
-                </DropdownButton>
+
                 <Button variant="success" onClick={handlePostAd}>
                   Post ad
                 </Button>

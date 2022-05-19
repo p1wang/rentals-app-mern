@@ -117,10 +117,10 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
             autoFocus
           >
             <option value="">Select</option>
-            <option value="apartment">Apartment</option>
-            <option value="condo">Condo</option>
-            <option value="house">House</option>
-            <option value="townhouse">Townhouse</option>
+            <option value="Apartment">Apartment</option>
+            <option value="Condo">Condo</option>
+            <option value="House">House</option>
+            <option value="Townhouse">Townhouse</option>
           </Form.Select>
         </Form.Group>
         {/* bedrooms */}
@@ -185,8 +185,8 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
             aria-label="Default select example"
           >
             <option value="">Select</option>
-            <option value="monthToMonth">Month-to-month</option>
-            <option value="oneYear">1 Year</option>
+            <option value="Month-to-month">Month-to-month</option>
+            <option value="1 Year">1 Year</option>
           </Form.Select>
         </Form.Group>
         {/* postal code */}

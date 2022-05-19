@@ -50,11 +50,31 @@ export const likeListing = createAsyncThunk(
   }
 );
 
+export const getListingsByUser = createAsyncThunk(
+  "listings/getListingsByUser",
+  async ({ id }) => {
+    console.log(id);
+    const { data } = await api.getListingsByUser(id);
+    return data;
+  }
+);
+
+export const getLikedListings = createAsyncThunk(
+  "listings/getLikedListings",
+  async ({ id }) => {
+    console.log(id);
+    const { data } = await api.getLikedListings(id);
+    return data;
+  }
+);
+
 export const listingsSlice = createSlice({
   name: "listings",
   initialState: {
     listing: {},
     listings: [],
+    userListings: [],
+    likedListings: [],
     status: "idle",
   },
   extraReducers: {
@@ -129,6 +149,33 @@ export const listingsSlice = createSlice({
       state.listings = state.listings.map((listing) =>
         listing._id === action.payload._id ? action.payload : listing
       );
+      state.userListings = state.userListings.map((listing) =>
+        listing._id === action.payload._id ? action.payload : listing
+      );
+    },
+
+    // getListingsByUser
+    [getListingsByUser.pending]: (state) => {
+      state.status = "pending";
+    },
+    [getListingsByUser.rejected]: (state) => {
+      state.status = "rejected";
+    },
+    [getListingsByUser.fulfilled]: (state, action) => {
+      state.status = "fulfilled";
+      state.userListings = action.payload;
+    },
+
+    // getLikedListings
+    [getLikedListings.pending]: (state) => {
+      state.status = "pending";
+    },
+    [getLikedListings.rejected]: (state) => {
+      state.status = "rejected";
+    },
+    [getLikedListings.fulfilled]: (state, action) => {
+      state.status = "fulfilled";
+      state.likedListings = action.payload;
     },
   },
 });

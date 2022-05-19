@@ -18,12 +18,16 @@ API.interceptors.request.use((req) => {
 
 // listings
 export const getListings = () => API.get("/listings");
+export const getListingsByUser = (id) =>
+  API.get(`/listings/userListings/${id}`);
+export const getLikedListings = (id) =>
+  API.get(`/listings/likedListings/${id}`);
 export const getListing = (id) => API.get(`/listings/${id}`);
 export const createListing = (newListing) => API.post("/listings", newListing);
 export const deleteListing = (id) => API.delete(`/listings/${id}`);
 export const updateListing = (id, updatedListing) =>
   API.patch(`/listings/${id}`, updatedListing);
-export const likeListing = (id) => API.patch(`/listings/${id}/likes`)
+export const likeListing = (id) => API.patch(`/listings/${id}/likes`);
 
 //users
 export const signUp = (formData) => API.post("/users/signup", formData);

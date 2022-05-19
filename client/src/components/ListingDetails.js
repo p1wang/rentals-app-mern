@@ -78,9 +78,9 @@ const ListingDetails = () => {
           <Col>
             <span className="fs-5 ">Unit Specs:</span>
             <div className="d-flex justify-content-around">
-              <p className="fw-light">{`Bedroom x ${currentListing.bedrooms}`}</p>
-              <p className="fw-light">{`Bathroom x ${currentListing.bathrooms}`}</p>
-              <p className="fw-light">{`Parking x ${currentListing.parkings}`}</p>
+              <p className="fw-light">{`${currentListing.bedrooms} Bedroom`}</p>
+              <p className="fw-light">{`${currentListing.bathrooms} Bathroom`}</p>
+              <p className="fw-light">{`${currentListing.parkings} Parking`}</p>
             </div>
           </Col>
         </Row>

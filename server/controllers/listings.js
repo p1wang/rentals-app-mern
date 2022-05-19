@@ -120,14 +120,6 @@ export const likeListing = async (req, res) => {
       oldListing.likes.push(req.userId);
     }
 
-    // if (oldListing.likes.includes(req.userId)) {
-    //   // filter function creates new array
-    //   oldListing.likes = oldListing.likes.filter((id) => id !== req.userId);
-    // } else {
-    //   // modifies array in place
-    //   oldListing.likes.push(req.userId);
-    // }
-
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res
         .status(404)
@@ -142,6 +134,40 @@ export const likeListing = async (req, res) => {
       }
     );
     res.status(200).json(updatedListing);
+  } catch (error) {
+    res.status(404).json({ message: "Something went wrong" });
+  }
+};
+
+// getListingsByUser
+export const getListingsByUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const existingUser = await UserModel.findOne({ _id: req.userId });
+
+    if (!existingUser)
+      return res.status(404).json({ message: "User doesn't exist" });
+
+    const userListings = await ListingModel.find({ creator: id });
+    res.status(200).json(userListings);
+  } catch (error) {
+    res.status(404).json({ message: "Something went wrong" });
+  }
+};
+
+// getLikedListings
+export const getLikedListings = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const existingUser = await UserModel.findOne({ _id: req.userId });
+
+    if (!existingUser)
+      return res.status(404).json({ message: "User doesn't exist" });
+
+    const userListings = await ListingModel.find({ likes: id });
+    res.status(200).json(userListings);
   } catch (error) {
     res.status(404).json({ message: "Something went wrong" });
   }
