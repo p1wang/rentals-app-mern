@@ -32,12 +32,13 @@ const images = [
 
 const ListingDetails = () => {
   const { currentListing } = useContext(Context);
+  console.log(currentListing);
 
   return (
     <>
       <Carousel>
-        {images.map((item) => (
-          <Carousel.Item key={item.id}>
+        {currentListing.images.map((image) => (
+          <Carousel.Item key={image}>
             <img
               className="d-block w-100"
               style={{
@@ -45,7 +46,7 @@ const ListingDetails = () => {
                 objectPosition: "center",
                 height: "45vh",
               }}
-              src={item.url}
+              src={image}
               alt="First slide"
             />
           </Carousel.Item>

@@ -17,7 +17,7 @@ API.interceptors.request.use((req) => {
 });
 
 // listings
-export const getListings = () => API.get("/listings");
+export const getListings = (page) => API.get(`/listings?page=${page}`);
 export const getListingsByUser = (id) =>
   API.get(`/listings/userListings/${id}`);
 export const getLikedListings = (id) =>

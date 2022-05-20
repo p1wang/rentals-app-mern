@@ -1,23 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 import Listings from "../components/Listings";
-import ListingSkeleton from "../components/ListingSkeleton";
 import PaginationComp from "../components/PaginationComp";
 import { getListings } from "../redux/listingsSlice";
 
 const HomePage = () => {
   const dispatch = useDispatch();
-  const { listings, status } = useSelector((state) => state.listings);
+  const { listings, totalPages, status } = useSelector(
+    (state) => state.listings
+  );
+
+  let [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    dispatch(getListings());
-    // if (status === "pending") return <ListingSkeleton count={9} />;
+    dispatch(getListings({ page: searchParams.get("page") }));
   }, []);
 
   return (
     <div>
       <Listings listings={listings} status={status} />
-      {status === "fulfilled" && <PaginationComp />}
+      {status === "fulfilled" && <PaginationComp totalPages={totalPages} />}
     </div>
   );
 };

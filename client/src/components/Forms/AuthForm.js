@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, InputGroup } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../../App";
 import { signIn, signUp } from "../../redux/authSlice";
+import { BsEyeSlash, BsEye } from "react-icons/bs";
 
 const AuthForm = () => {
   const { user, status } = useSelector((state) => ({ ...state.auth }));
@@ -12,6 +13,7 @@ const AuthForm = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showPass, setShowPass] = useState(false);
 
   useEffect(() => {
     if (user && status === "fulfilled") {
@@ -39,18 +41,6 @@ const AuthForm = () => {
     isSignUp
       ? dispatch(signUp({ formData, navigate }))
       : dispatch(signIn({ formData, navigate }));
-
-    // if (status === "fulfilled") {
-    //   setAlertConfigs({
-    //     show: true,
-    //     alertType: "success",
-    //     alertMessage: `Welcome, ${user?.result.name}`,
-    //   });
-
-    //   setTimeout(() => {
-    //     setAlertConfigs({ ...alertConfigs, show: false });
-    //   }, 2000);
-    // }
     reset();
   };
 
@@ -97,14 +87,22 @@ const AuthForm = () => {
       {/* password */}
       <Form.Group className="mb-3" controlId="formBasicPassword">
         <Form.Label>Password</Form.Label>
-        <Form.Control
-          {...register("password")}
-          required
-          minLength="6"
-          maxLength="20"
-          type="password"
-          placeholder="Password"
-        />
+        <InputGroup className="mb-3">
+          <Form.Control
+            {...register("password")}
+            required
+            minLength="6"
+            maxLength="20"
+            type={showPass ? "text" : "password"}
+            placeholder="Password"
+          />
+          <InputGroup.Text
+            id="toggle-password-visibility"
+            onClick={() => setShowPass(!showPass)}
+          >
+            {showPass ? <BsEyeSlash size={24} /> : <BsEye size={24} />}
+          </InputGroup.Text>
+        </InputGroup>
       </Form.Group>
       {isSignUp && (
         // confirm password

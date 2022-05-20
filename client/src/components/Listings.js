@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import MessageForm from "./Forms/MessageForm";
 
 import Listing from "./Listing";
-
 import EditListingForm from "./Forms/EditListingForm";
 
 const Listings = ({ listings, status }) => {

@@ -26,11 +26,30 @@ export const createListing = async (req, res) => {
 };
 
 // get listings
+// export const getListings = async (req, res) => {
+//   const listings = await ListingModel.find();
+
+//   try {
+//     res.status(200).json(listings);
+//   } catch (error) {
+//     res.status(404).json({ message: "Something went wrong" });
+//   }
+// };
+
 export const getListings = async (req, res) => {
-  const listings = await ListingModel.find();
+  const { page } = req.query;
+  console.log(page);
+  const limit = 9;
 
   try {
-    res.status(200).json(listings);
+    const total = await ListingModel.countDocuments({});
+
+    const listings = await ListingModel.find()
+      .sort({ _id: -1 })
+      .limit(limit)
+      .skip((page - 1) * limit);
+
+    res.status(200).json({ totalPages: Math.ceil(total / limit), listings });
   } catch (error) {
     res.status(404).json({ message: "Something went wrong" });
   }
@@ -133,6 +152,7 @@ export const likeListing = async (req, res) => {
         new: true,
       }
     );
+
     res.status(200).json(updatedListing);
   } catch (error) {
     res.status(404).json({ message: "Something went wrong" });
@@ -166,8 +186,8 @@ export const getLikedListings = async (req, res) => {
     if (!existingUser)
       return res.status(404).json({ message: "User doesn't exist" });
 
-    const userListings = await ListingModel.find({ likes: id });
-    res.status(200).json(userListings);
+    const likedListings = await ListingModel.find({ likes: id });
+    res.status(200).json(likedListings);
   } catch (error) {
     res.status(404).json({ message: "Something went wrong" });
   }

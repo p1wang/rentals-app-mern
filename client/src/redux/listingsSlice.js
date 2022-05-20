@@ -10,10 +10,20 @@ export const createListing = createAsyncThunk(
   }
 );
 
+// export const getListings = createAsyncThunk(
+//   "listings/getListings",
+//   async () => {
+//     const { data } = await api.getListings();
+//     return data;
+//   }
+// );
+
 export const getListings = createAsyncThunk(
   "listings/getListings",
-  async () => {
-    const { data } = await api.getListings();
+  async ({ page }) => {
+    const { data } = await api.getListings(page);
+    console.log(data);
+
     return data;
   }
 );
@@ -73,9 +83,11 @@ export const listingsSlice = createSlice({
   initialState: {
     listing: {},
     listings: [],
+    totalPages: "",
     userListings: [],
     likedListings: [],
     status: "idle",
+    spinnerStatus: "idle",
   },
   extraReducers: {
     // createListing
@@ -92,13 +104,17 @@ export const listingsSlice = createSlice({
     // getListings
     [getListings.pending]: (state) => {
       state.status = "pending";
+      state.spinnerStatus = "pending";
     },
     [getListings.rejected]: (state) => {
       state.status = "rejected";
     },
     [getListings.fulfilled]: (state, action) => {
       state.status = "fulfilled";
-      state.listings = action.payload;
+
+      state.listings = action.payload.listings;
+      state.totalPages = action.payload.totalPages;
+      state.spinnerStatus = "fulfilled";
     },
     // getListing
     [getListing.pending]: (state) => {
@@ -121,6 +137,12 @@ export const listingsSlice = createSlice({
     [deleteListing.fulfilled]: (state, action) => {
       state.status = "fulfilled";
       state.listings = state.listings.filter(
+        (listing) => listing._id !== action.payload
+      );
+      state.userListings = state.userListings.filter(
+        (listing) => listing._id !== action.payload
+      );
+      state.likedListings = state.likedListings.filter(
         (listing) => listing._id !== action.payload
       );
     },
@@ -151,6 +173,9 @@ export const listingsSlice = createSlice({
       );
       state.userListings = state.userListings.map((listing) =>
         listing._id === action.payload._id ? action.payload : listing
+      );
+      state.likedListings = state.likedListings.filter(
+        (listing) => listing._id !== action.payload._id
       );
     },
 
