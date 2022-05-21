@@ -34,22 +34,26 @@ const HomePage = () => {
 
   return (
     <div>
-      <Accordion className="mb-5">
-        <Accordion.Item eventKey={showFilterForm ? "1" : "0"}>
-          <Accordion.Header>Filter</Accordion.Header>
-          <Accordion.Body>
-            <FilterForm setShowFilterForm={setShowFilterForm} />
-          </Accordion.Body>
-        </Accordion.Item>
-      </Accordion>
+      {status === "fulfilled" && (
+        <>
+          <Accordion className="mb-5">
+            <Accordion.Item eventKey={showFilterForm ? "1" : "0"}>
+              <Accordion.Header>Filter</Accordion.Header>
+              <Accordion.Body>
+                <FilterForm setShowFilterForm={setShowFilterForm} />
+              </Accordion.Body>
+            </Accordion.Item>
+          </Accordion>
+          <Listings listings={listings} status={status} />
+        </>
+      )}
 
-      <Listings listings={listings} status={status} />
       {listings.length === 0 && status === "fulfilled" && (
         <div className="text-center">No listings were found.</div>
       )}
 
-      <PaginationComp totalPages={totalPages} />
-      {/* {status === "fulfilled" && <PaginationComp totalPages={totalPages} />} */}
+      {/* <PaginationComp totalPages={totalPages} /> */}
+      {status === "fulfilled" && <PaginationComp totalPages={totalPages} />}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button, InputGroup } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,26 +6,19 @@ import { useNavigate } from "react-router-dom";
 import { Context } from "../../App";
 import { signIn, signUp } from "../../redux/authSlice";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
+import useShowAlert from "../../hooks/useShowAlert";
 
 const AuthForm = () => {
   const { user, status } = useSelector((state) => ({ ...state.auth }));
-  const { alertConfigs, setAlertConfigs } = useContext(Context);
   const [isSignUp, setIsSignUp] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showPass, setShowPass] = useState(false);
+  const showAlert = useShowAlert();
 
   useEffect(() => {
     if (user && status === "fulfilled") {
-      setAlertConfigs({
-        show: true,
-        alertType: "success",
-        alertMessage: `Welcome, ${user?.result.name}`,
-      });
-
-      setTimeout(() => {
-        setAlertConfigs({ ...alertConfigs, show: false });
-      }, 2000);
+      showAlert("success", `Welcome, ${user?.result.name}`);
     }
   }, [user]);
 
@@ -104,6 +97,7 @@ const AuthForm = () => {
           </InputGroup.Text>
         </InputGroup>
       </Form.Group>
+
       {isSignUp && (
         // confirm password
         <Form.Group className="mb-3" controlId="formBasicConfirmPassword">

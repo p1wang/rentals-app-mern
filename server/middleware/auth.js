@@ -5,20 +5,13 @@ const secret = "auth";
 const auth = async (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-    const isCustomAuth = token.length < 500;
 
     let decodedData;
 
-    if (token && isCustomAuth) {
-      // email auth
-      decodedData = jwt.verify(token, secret);
-      req.userId = decodedData?.id;
-      req.userEmail = decodedData?.email;
-    } else {
-      // google auth
-      decodedData = jwt.decode(token);
-      req.userId = decodedData?.sub;
-    }
+    // email auth
+    decodedData = jwt.verify(token, secret);
+    req.userId = decodedData?.id;
+    req.userEmail = decodedData?.email;
 
     next();
   } catch (error) {

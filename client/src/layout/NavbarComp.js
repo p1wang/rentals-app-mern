@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
   Navbar,
   Offcanvas,
@@ -10,33 +10,28 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Context } from "../App";
+import useShowAlert from "../hooks/useShowAlert";
 import { setLogout } from "../redux/authSlice";
+import { resetListingsState } from "../redux/listingsSlice";
 
 const NavbarComp = () => {
-  const { alertConfigs, setAlertConfigs } = useContext(Context);
   const { user } = useSelector((state) => ({ ...state.auth }));
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const showAlert = useShowAlert();
 
   const handleLogout = () => {
-    dispatch(setLogout());
     navigate("/auth", { replace: true });
+    dispatch(setLogout());
+    dispatch(resetListingsState());
   };
 
   const handlePostAd = () => {
     if (user) {
       navigate("/listings/new");
     } else {
-      setAlertConfigs({
-        show: true,
-        alertType: "warning",
-        alertMessage: "Please sign in to post your listings.",
-      });
-      setTimeout(() => {
-        setAlertConfigs({ ...alertConfigs, show: false });
-      }, 2000);
       navigate("/auth");
+      showAlert("warning", "Please sign in to post your listings.");
     }
   };
 
@@ -63,9 +58,6 @@ const NavbarComp = () => {
                     <Navbar.Text>
                       Hi, <span>{user?.result.name}</span>
                     </Navbar.Text>
-                    {/* <Button onClick={handleLogout} variant="primary">
-                      Logout
-                    </Button> */}
                     <DropdownButton id="dropdown-basic-button" title="Settings">
                       <Dropdown.Item href="/dashboard">Dashboard</Dropdown.Item>
                       <Dropdown.Item href="#" onClick={handleLogout}>

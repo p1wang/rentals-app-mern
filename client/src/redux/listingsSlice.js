@@ -10,14 +10,6 @@ export const createListing = createAsyncThunk(
   }
 );
 
-// export const getListings = createAsyncThunk(
-//   "listings/getListings",
-//   async () => {
-//     const { data } = await api.getListings();
-//     return data;
-//   }
-// );
-
 export const getListings = createAsyncThunk(
   "listings/getListings",
   async ({ searchQuery }) => {
@@ -94,8 +86,18 @@ export const listingsSlice = createSlice({
     userListings: [],
     likedListings: [],
     status: "idle",
-    spinnerStatus: "idle",
   },
+  reducers: {
+    resetListingsState: (state) => {
+      state.listing = {};
+      state.listings = [];
+      state.totalPages = "";
+      state.userListings = [];
+      state.likedListings = [];
+      state.status = "idle";
+    },
+  },
+
   extraReducers: {
     // createListing
     [createListing.pending]: (state) => {
@@ -111,17 +113,14 @@ export const listingsSlice = createSlice({
     // getListings
     [getListings.pending]: (state) => {
       state.status = "pending";
-      state.spinnerStatus = "pending";
     },
     [getListings.rejected]: (state) => {
       state.status = "rejected";
     },
     [getListings.fulfilled]: (state, action) => {
       state.status = "fulfilled";
-
       state.listings = action.payload.listings;
       state.totalPages = action.payload.totalPages;
-      state.spinnerStatus = "fulfilled";
     },
     // getListing
     [getListing.pending]: (state) => {
@@ -168,13 +167,13 @@ export const listingsSlice = createSlice({
     },
     // likeListing
     [likeListing.pending]: (state) => {
-      state.status = "pending";
+      // state.status = "pending";
     },
     [likeListing.rejected]: (state) => {
-      state.status = "rejected";
+      // state.status = "rejected";
     },
     [likeListing.fulfilled]: (state, action) => {
-      state.status = "fulfilled";
+      // state.status = "fulfilled";
       state.listings = state.listings.map((listing) =>
         listing._id === action.payload._id ? action.payload : listing
       );
@@ -222,8 +221,11 @@ export const listingsSlice = createSlice({
       state.status = "fulfilled";
       state.totalPages = action.payload.totalPages;
       state.listings = action.payload.limitedFilteredListings;
+      state.status = "fulfilled";
     },
   },
 });
+
+export const { resetListingsState } = listingsSlice.actions;
 
 export default listingsSlice.reducer;

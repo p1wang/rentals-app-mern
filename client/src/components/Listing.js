@@ -8,27 +8,23 @@ import { BsBoxArrowRight } from "react-icons/bs";
 
 import { Context } from "../App";
 import ListingDetails from "./ListingDetails";
+import { useNavigate } from "react-router-dom";
+import useShowAlert from "../hooks/useShowAlert";
 
 const Listing = ({ listing, status, setShowEditForm, setShowMessageForm }) => {
   const { user } = useSelector((state) => ({ ...state.auth }));
-  const { setCurrentListing, alertConfigs, setAlertConfigs } =
-    useContext(Context);
+  const { setCurrentListing } = useContext(Context);
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const isCreator = user?.result._id === listing?.creator;
 
   const handleClose = () => setShow(false);
+  const showAlert = useShowAlert();
 
   const handleLike = () => {
     if (!user) {
-      setAlertConfigs({
-        show: true,
-        alertType: "warning",
-        alertMessage: "To like a listing, please sign in.",
-      });
-      setTimeout(() => {
-        setAlertConfigs({ ...alertConfigs, show: false });
-      }, 2000);
+      showAlert("warning", "To like a listing, please sign in.");
     } else {
       dispatch(likeListing({ id: listing._id }));
     }
@@ -40,15 +36,10 @@ const Listing = ({ listing, status, setShowEditForm, setShowMessageForm }) => {
 
   const handleDelete = () => {
     dispatch(deleteListing({ id: listing._id }));
+
     if (status === "fulfilled") {
-      setAlertConfigs({
-        show: true,
-        alertType: "success",
-        alertMessage: "The listing was successfully deleted!",
-      });
-      setTimeout(() => {
-        setAlertConfigs({ ...alertConfigs, show: false });
-      }, 2000);
+      navigate("/");
+      showAlert("success", "The listing was successfully deleted!");
     }
   };
 

@@ -4,12 +4,15 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Context } from "../../App";
+import useShowAlert from "../../hooks/useShowAlert";
 import { createListing, updateListing } from "../../redux/listingsSlice";
 
 const ListingForm = ({ setShowEditForm, isUpdate }) => {
-  const { currentListing, alertConfigs, setAlertConfigs } = useContext(Context);
+  const { currentListing } = useContext(Context);
   const { status } = useSelector((state) => state.listings);
   const dispatch = useDispatch();
+  const showAlert = useShowAlert();
+
   const { register, handleSubmit, reset } = useForm({
     defaultValues: {
       unitType: isUpdate ? currentListing.unitType : "",
@@ -51,23 +54,9 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
     isUpdate && setShowEditForm(false);
 
     if (isUpdate && status === "fulfilled") {
-      setAlertConfigs({
-        show: true,
-        alertType: "success",
-        alertMessage: "The listing was successfully updated!",
-      });
-      setTimeout(() => {
-        setAlertConfigs({ ...alertConfigs, show: false });
-      }, 2000);
+      showAlert("success", "The listing was successfully updated!");
     } else if (status === "fulfilled") {
-      setAlertConfigs({
-        show: true,
-        alertType: "success",
-        alertMessage: "The listing was successfully created!",
-      });
-      setTimeout(() => {
-        setAlertConfigs({ ...alertConfigs, show: false });
-      }, 2000);
+      showAlert("success", "The listing was successfully created!");
     }
     reset();
   };

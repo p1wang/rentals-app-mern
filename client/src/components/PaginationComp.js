@@ -18,7 +18,6 @@ const PaginationComp = ({ totalPages }) => {
   };
 
   const getNewpage = (action, index) => {
-    console.log(typeof index);
     switch (action) {
       case "first":
         return 1;

@@ -111,7 +111,7 @@ const FilterForm = ({ setShowFilterForm }) => {
 
       {/* price */}
       <Form.Group className="mb-3" controlId="price">
-        <Form.Label>Price</Form.Label>
+        <Form.Label>{"Max Price"}</Form.Label>
         <Form.Control
           {...register("price")}
           type="number"

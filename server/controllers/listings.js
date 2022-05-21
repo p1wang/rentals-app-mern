@@ -76,6 +76,7 @@ export const deleteListing = async (req, res) => {
       return res.status(404).json({ message: `No listing with id: ${id}` });
     }
     await ListingModel.findByIdAndRemove(id);
+
     res.status(200).json(id);
   } catch (error) {
     res.status(404).json({ message: "Something went wrong" });
@@ -206,7 +207,7 @@ export const getListingsByQuery = async (req, res) => {
         { bedrooms: bedrooms ? { $eq: bedrooms } : { $exists: true } },
         { bathrooms: bathrooms ? { $eq: bathrooms } : { $exists: true } },
         { parkings: parkings ? { $eq: parkings } : { $exists: true } },
-        { price: price ? { $eq: price } : { $exists: true } },
+        { price: price ? { $lt: price } : { $exists: true } },
         {
           agreementType: agreementType
             ? { $eq: agreementType }
@@ -223,7 +224,7 @@ export const getListingsByQuery = async (req, res) => {
         { bedrooms: bedrooms ? { $eq: bedrooms } : { $exists: true } },
         { bathrooms: bathrooms ? { $eq: bathrooms } : { $exists: true } },
         { parkings: parkings ? { $eq: parkings } : { $exists: true } },
-        { price: price ? { $eq: price } : { $exists: true } },
+        { price: price ? { $lt: price } : { $exists: true } },
         {
           agreementType: agreementType
             ? { $eq: agreementType }

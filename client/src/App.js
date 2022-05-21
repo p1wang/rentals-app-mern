@@ -18,7 +18,8 @@ import AuthPage from "./pages/AuthPage";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout, setUser } from "./redux/authSlice";
 import Layout from "./layout/Layout";
-import ListingSkeleton from "./components/ListingSkeleton";
+import { resetListingsState } from "./redux/listingsSlice";
+import Loader from "./components/Loader";
 
 export const Context = createContext();
 
@@ -27,9 +28,8 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const user = JSON.parse(localStorage.getItem("profile"));
-  const { spinnerStatus } = useSelector((state) => state.listings);
+  const { status } = useSelector((state) => state.listings);
   const [currentListing, setCurrentListing] = useState("");
-  const [showSpinner, setShowSpinner] = useState(false);
   const [alertConfigs, setAlertConfigs] = useState({
     show: false,
     alertType: "",
@@ -47,6 +47,7 @@ function App() {
 
       if (decodedToken.exp < new Date().getTime() / 1000) {
         dispatch(setLogout());
+        dispatch(resetListingsState());
         navigate("/", { replace: true });
       }
     }
@@ -69,11 +70,10 @@ function App() {
           setCurrentListing,
           alertConfigs,
           setAlertConfigs,
-          setShowSpinner,
         }}
       >
         <Layout>
-          {spinnerStatus === "pending" && <ListingSkeleton count={9} />}
+          {status === "pending" && <Loader />}
           <Routes>
             <Route path="/" element={<Navigate to={"/listings"} />} />
             <Route path="/dashboard" element={<DashboardPage />} />
@@ -81,7 +81,7 @@ function App() {
             <Route path="/listings/search" element={<HomePage />} />
             <Route path="/listings/new" element={<NewListingPage />} />
             <Route path="/auth" element={<AuthPage />} />
-            <Route path="/*" element={<HomePage />} />
+            <Route path="/*" element={<Navigate to={"/"} />} />
           </Routes>
         </Layout>
       </Context.Provider>
