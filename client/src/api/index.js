@@ -17,11 +17,16 @@ API.interceptors.request.use((req) => {
 });
 
 // listings
-export const getListings = (page) => API.get(`/listings?page=${page}`);
+export const getListings = (searchQuery) =>
+  API.get(`/listings?page=${searchQuery.page}`);
 export const getListingsByUser = (id) =>
   API.get(`/listings/userListings/${id}`);
 export const getLikedListings = (id) =>
   API.get(`/listings/likedListings/${id}`);
+
+export const getListingsByQuery = (searchQuery) =>
+  API.get(`/listings/search`, { params: searchQuery });
+
 export const getListing = (id) => API.get(`/listings/${id}`);
 export const createListing = (newListing) => API.post("/listings", newListing);
 export const deleteListing = (id) => API.delete(`/listings/${id}`);

@@ -21,15 +21,15 @@ const DashboardPage = () => {
     <Container>
       <Accordion defaultActiveKey="0">
         <Accordion.Item eventKey="0">
-          <Accordion.Header>My Listings</Accordion.Header>
-          <Accordion.Body>
-            <Listings listings={userListings} status={status} />
-          </Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="1">
           <Accordion.Header>Liked Listings</Accordion.Header>
           <Accordion.Body>
             <Listings listings={likedListings} status={status} />
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="1">
+          <Accordion.Header>My Listings</Accordion.Header>
+          <Accordion.Body>
+            <Listings listings={userListings} status={status} />
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>

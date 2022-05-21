@@ -9,12 +9,14 @@ import {
   likeListing,
   getListingsByUser,
   getLikedListings,
+  getListingsByQuery
 } from "../controllers/listings.js";
 import auth from "../middleware/auth.js";
 
 const router = express.Router();
 
 router.get("/", getListings);
+router.get("/search", getListingsByQuery);
 router.get("/userListings/:id", auth, getListingsByUser);
 router.get("/likedListings/:id", auth, getLikedListings);
 router.get("/:id", getListing);

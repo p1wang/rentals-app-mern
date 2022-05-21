@@ -25,20 +25,9 @@ export const createListing = async (req, res) => {
   }
 };
 
-// get listings
-// export const getListings = async (req, res) => {
-//   const listings = await ListingModel.find();
-
-//   try {
-//     res.status(200).json(listings);
-//   } catch (error) {
-//     res.status(404).json({ message: "Something went wrong" });
-//   }
-// };
-
+// getListings
 export const getListings = async (req, res) => {
   const { page } = req.query;
-  console.log(page);
   const limit = 9;
 
   try {
@@ -188,6 +177,68 @@ export const getLikedListings = async (req, res) => {
 
     const likedListings = await ListingModel.find({ likes: id });
     res.status(200).json(likedListings);
+  } catch (error) {
+    res.status(404).json({ message: "Something went wrong" });
+  }
+};
+
+// getListingsByQuery
+export const getListingsByQuery = async (req, res) => {
+  const {
+    bedrooms,
+    bathrooms,
+    parkings,
+    price,
+    agreementType,
+    unitType,
+    page,
+  } = req.query;
+
+  console.log(unitType);
+
+  const limit = 9;
+
+  console.log(page);
+
+  try {
+    const filteredListings = await ListingModel.find({
+      $and: [
+        { bedrooms: bedrooms ? { $eq: bedrooms } : { $exists: true } },
+        { bathrooms: bathrooms ? { $eq: bathrooms } : { $exists: true } },
+        { parkings: parkings ? { $eq: parkings } : { $exists: true } },
+        { price: price ? { $eq: price } : { $exists: true } },
+        {
+          agreementType: agreementType
+            ? { $eq: agreementType }
+            : { $exists: true },
+        },
+        { unitType: unitType ? { $eq: unitType } : { $exists: true } },
+      ],
+    });
+
+    const total = filteredListings.length;
+
+    const limitedFilteredListings = await ListingModel.find({
+      $and: [
+        { bedrooms: bedrooms ? { $eq: bedrooms } : { $exists: true } },
+        { bathrooms: bathrooms ? { $eq: bathrooms } : { $exists: true } },
+        { parkings: parkings ? { $eq: parkings } : { $exists: true } },
+        { price: price ? { $eq: price } : { $exists: true } },
+        {
+          agreementType: agreementType
+            ? { $eq: agreementType }
+            : { $exists: true },
+        },
+        { unitType: unitType ? { $eq: unitType } : { $exists: true } },
+      ],
+    })
+      .sort({ _id: -1 })
+      .limit(limit)
+      .skip((page - 1) * limit);
+
+    res
+      .status(200)
+      .json({ totalPages: Math.ceil(total / limit), limitedFilteredListings });
   } catch (error) {
     res.status(404).json({ message: "Something went wrong" });
   }

@@ -20,8 +20,8 @@ export const createListing = createAsyncThunk(
 
 export const getListings = createAsyncThunk(
   "listings/getListings",
-  async ({ page }) => {
-    const { data } = await api.getListings(page);
+  async ({ searchQuery }) => {
+    const { data } = await api.getListings(searchQuery);
     console.log(data);
 
     return data;
@@ -63,7 +63,6 @@ export const likeListing = createAsyncThunk(
 export const getListingsByUser = createAsyncThunk(
   "listings/getListingsByUser",
   async ({ id }) => {
-    console.log(id);
     const { data } = await api.getListingsByUser(id);
     return data;
   }
@@ -72,8 +71,16 @@ export const getListingsByUser = createAsyncThunk(
 export const getLikedListings = createAsyncThunk(
   "listings/getLikedListings",
   async ({ id }) => {
-    console.log(id);
     const { data } = await api.getLikedListings(id);
+    return data;
+  }
+);
+
+export const getListingsByQuery = createAsyncThunk(
+  "listings/getListingsByQuery",
+  async ({ searchQuery }) => {
+    console.log(searchQuery);
+    const { data } = await api.getListingsByQuery(searchQuery);
     return data;
   }
 );
@@ -201,6 +208,20 @@ export const listingsSlice = createSlice({
     [getLikedListings.fulfilled]: (state, action) => {
       state.status = "fulfilled";
       state.likedListings = action.payload;
+    },
+
+    // getListingsByQuery
+
+    [getListingsByQuery.pending]: (state) => {
+      state.status = "pending";
+    },
+    [getListingsByQuery.rejected]: (state) => {
+      state.status = "rejected";
+    },
+    [getListingsByQuery.fulfilled]: (state, action) => {
+      state.status = "fulfilled";
+      state.totalPages = action.payload.totalPages;
+      state.listings = action.payload.limitedFilteredListings;
     },
   },
 });

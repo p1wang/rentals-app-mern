@@ -1,11 +1,16 @@
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { Alert } from "react-bootstrap";
 import { createContext, useEffect, useState } from "react";
 import decode from "jwt-decode";
 
 import "./App.css";
 import HomePage from "./pages/HomePage";
-import Listings from "./components/Listings";
 
 import DashboardPage from "./pages/DashboardPage";
 import NewListingPage from "./pages/NewListingPage";
@@ -70,11 +75,13 @@ function App() {
         <Layout>
           {spinnerStatus === "pending" && <ListingSkeleton count={9} />}
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<Navigate to={"/listings"} />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/listings" element={<HomePage />} />
+            <Route path="/listings/search" element={<HomePage />} />
             <Route path="/listings/new" element={<NewListingPage />} />
             <Route path="/auth" element={<AuthPage />} />
+            <Route path="/*" element={<HomePage />} />
           </Routes>
         </Layout>
       </Context.Provider>

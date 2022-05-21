@@ -24,7 +24,6 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
     },
   });
 
-  /////////////////////////////////////////////////////////////////
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();

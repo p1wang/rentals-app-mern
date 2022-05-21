@@ -8,7 +8,6 @@ import { BsBoxArrowRight } from "react-icons/bs";
 
 import { Context } from "../App";
 import ListingDetails from "./ListingDetails";
-import { useMatch } from "react-router-dom";
 
 const Listing = ({ listing, status, setShowEditForm, setShowMessageForm }) => {
   const { user } = useSelector((state) => ({ ...state.auth }));
