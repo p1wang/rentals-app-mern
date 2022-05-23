@@ -20,47 +20,84 @@ export const signIn = createAsyncThunk(
   }
 );
 
+export const updateUser = createAsyncThunk(
+  "auth/updateUser",
+  async ({ id, update }) => {
+    const { data } = await api.updateUser(id, update);
+
+    return data;
+  }
+);
+
 export const authSlice = createSlice({
   name: "auth",
   // initial state
   initialState: {
     user: null,
+    alert: null,
     status: "idle",
   },
   // reducer object
   reducers: {
     setUser: (state, action) => {
-      state.user = action.payload;
+      return { ...state, user: action.payload };
     },
     setLogout: (state) => {
       localStorage.clear();
-      state.user = null;
+      return { ...state, user: null, status: "idle" };
     },
   },
   extraReducers: {
     // signup
     [signUp.pending]: (state) => {
-      state.status = "pending";
+      return { ...state, status: "pending" };
     },
     [signUp.rejected]: (state) => {
-      state.status = "rejected";
+      return { ...state, status: "rejected" };
     },
     [signUp.fulfilled]: (state, action) => {
-      state.status = "fulfilled";
-      state.user = action.payload;
       localStorage.setItem("profile", JSON.stringify({ ...action.payload }));
+      return {
+        ...state,
+        status: "fulfilled",
+        user: action.payload,
+        alert: { variant: "success", message: "Welcome!" },
+      };
     },
+
     //signin
     [signIn.pending]: (state) => {
-      state.status = "pending";
+      return { ...state, status: "pending" };
     },
     [signIn.rejected]: (state) => {
-      state.status = "rejected";
+      return { ...state, status: "rejected" };
     },
     [signIn.fulfilled]: (state, action) => {
-      state.status = "fulfilled";
-      state.user = action.payload;
       localStorage.setItem("profile", JSON.stringify({ ...action.payload }));
+      return {
+        ...state,
+        status: "fulfilled",
+        user: action.payload,
+        alert: { variant: "success", message: "Welcome" },
+      };
+    },
+
+    // updateUser
+    [updateUser.pending]: (state) => {
+      return { ...state, status: "pending" };
+    },
+    [updateUser.rejected]: (state) => {
+      return { ...state, status: "rejected" };
+    },
+    [updateUser.fulfilled]: (state, action) => {
+      localStorage.setItem("profile", JSON.stringify({ ...action.payload }));
+
+      return {
+        ...state,
+        status: "fulfilled",
+        user: action.payload,
+        alert: { variant: "success", message: "Profile successfully updated!" },
+      };
     },
   },
 });

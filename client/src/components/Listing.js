@@ -1,30 +1,30 @@
 import React, { useContext, useState } from "react";
 import Moment from "react-moment";
 import { Card, Button, Offcanvas } from "react-bootstrap";
-import { deleteListing, likeListing } from "../redux/listingsSlice";
+import {
+  deleteListing,
+  likeListing,
+  setCurrentListing,
+} from "../redux/listingsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineStar } from "react-icons/ai";
 import { BsBoxArrowRight } from "react-icons/bs";
 
-import { Context } from "../App";
 import ListingDetails from "./ListingDetails";
 import { useNavigate } from "react-router-dom";
-import useShowAlert from "../hooks/useShowAlert";
 
 const Listing = ({ listing, status, setShowEditForm, setShowMessageForm }) => {
   const { user } = useSelector((state) => ({ ...state.auth }));
-  const { setCurrentListing } = useContext(Context);
+
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const isCreator = user?.result._id === listing?.creator;
 
   const handleClose = () => setShow(false);
-  const showAlert = useShowAlert();
 
   const handleLike = () => {
     if (!user) {
-      showAlert("warning", "To like a listing, please sign in.");
+      console.log("");
     } else {
       dispatch(likeListing({ id: listing._id }));
     }
@@ -36,11 +36,6 @@ const Listing = ({ listing, status, setShowEditForm, setShowMessageForm }) => {
 
   const handleDelete = () => {
     dispatch(deleteListing({ id: listing._id }));
-
-    if (status === "fulfilled") {
-      navigate("/");
-      showAlert("success", "The listing was successfully deleted!");
-    }
   };
 
   const handleUpdate = () => {

@@ -1,17 +1,16 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Context } from "../../App";
-import useShowAlert from "../../hooks/useShowAlert";
 import { createListing, updateListing } from "../../redux/listingsSlice";
+import convertToBase64 from "../../utils/convertToBase64";
 
 const ListingForm = ({ setShowEditForm, isUpdate }) => {
-  const { currentListing } = useContext(Context);
-  const { status } = useSelector((state) => state.listings);
+  const { status, listings, currentListing } = useSelector(
+    (state) => state.listings
+  );
   const dispatch = useDispatch();
-  const showAlert = useShowAlert();
 
   const { register, handleSubmit, reset } = useForm({
     defaultValues: {
@@ -27,21 +26,13 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
     },
   });
 
-  const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.readAsDataURL(file);
-    });
-  };
-
   const onSubmit = (formData) => {
     convertToBase64(formData.images[0]).then((convertedImages) =>
       isUpdate
         ? dispatch(
             updateListing({
               id: currentListing._id,
-              updatedListing: { ...formData, images: convertedImages },
+              update: { ...formData, images: convertedImages },
             })
           )
         : dispatch(
@@ -53,12 +44,7 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
 
     isUpdate && setShowEditForm(false);
 
-    if (isUpdate && status === "fulfilled") {
-      showAlert("success", "The listing was successfully updated!");
-    } else if (status === "fulfilled") {
-      showAlert("success", "The listing was successfully created!");
-    }
-    reset();
+    // reset();
   };
 
   // ////////////////////////// Multiple /////////////////////////////////

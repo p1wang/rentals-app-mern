@@ -3,5 +3,8 @@ import listingsReducer from "./listingsSlice";
 import authReducer from "./authSlice";
 
 export const store = configureStore({
-  reducer: { listings: listingsReducer, auth: authReducer },
+  reducer: {
+    listings: listingsReducer,
+    auth: authReducer,
+  },
 });

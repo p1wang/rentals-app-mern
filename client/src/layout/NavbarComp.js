@@ -10,7 +10,6 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import useShowAlert from "../hooks/useShowAlert";
 import { setLogout } from "../redux/authSlice";
 import { resetListingsState } from "../redux/listingsSlice";
 
@@ -18,7 +17,6 @@ const NavbarComp = () => {
   const { user } = useSelector((state) => ({ ...state.auth }));
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const showAlert = useShowAlert();
 
   const handleLogout = () => {
     navigate("/auth", { replace: true });
@@ -31,7 +29,6 @@ const NavbarComp = () => {
       navigate("/listings/new");
     } else {
       navigate("/auth");
-      showAlert("warning", "Please sign in to post your listings.");
     }
   };
 

@@ -2,7 +2,7 @@ import React from "react";
 import { Modal } from "react-bootstrap";
 import ListingForm from "./ListingForm";
 
-const EditListingForm = ({ showEditForm, setShowEditForm }) => {
+const UpdateListingForm = ({ showEditForm, setShowEditForm }) => {
   return (
     <Modal centered show={showEditForm} onHide={() => setShowEditForm(false)}>
       <Modal.Header closeButton>
@@ -15,4 +15,4 @@ const EditListingForm = ({ showEditForm, setShowEditForm }) => {
   );
 };
 
-export default EditListingForm;
+export default UpdateListingForm;

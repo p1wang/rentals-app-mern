@@ -21,24 +21,24 @@ import Layout from "./layout/Layout";
 import { resetListingsState } from "./redux/listingsSlice";
 import Loader from "./components/Loader";
 
-export const Context = createContext();
-
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
+  let location = useLocation();
   const user = JSON.parse(localStorage.getItem("profile"));
-  const { status } = useSelector((state) => state.listings);
-  const [currentListing, setCurrentListing] = useState("");
-  const [alertConfigs, setAlertConfigs] = useState({
-    show: false,
-    alertType: "",
-    alertMessage: "",
-  });
+  const { status, alert } = useSelector((state) => state.listings);
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     dispatch(setUser(user));
   }, []);
+
+  useEffect(() => {
+    alert && setShowAlert(true);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 2000);
+  }, [alert]);
 
   useEffect(() => {
     const token = user?.token;
@@ -55,36 +55,24 @@ function App() {
 
   return (
     <>
-      {alertConfigs.show && (
-        <Alert
-          variant={alertConfigs.alertType}
-          className="sticky-top text-center"
-        >
-          {alertConfigs.alertMessage}
+      {showAlert && (
+        <Alert variant={alert.variant} className="sticky-top text-center">
+          {alert.message}
         </Alert>
       )}
 
-      <Context.Provider
-        value={{
-          currentListing,
-          setCurrentListing,
-          alertConfigs,
-          setAlertConfigs,
-        }}
-      >
-        <Layout>
-          {status === "pending" && <Loader />}
-          <Routes>
-            <Route path="/" element={<Navigate to={"/listings"} />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/listings" element={<HomePage />} />
-            <Route path="/listings/search" element={<HomePage />} />
-            <Route path="/listings/new" element={<NewListingPage />} />
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/*" element={<Navigate to={"/"} />} />
-          </Routes>
-        </Layout>
-      </Context.Provider>
+      <Layout>
+        {status === "pending" && <Loader />}
+        <Routes>
+          <Route path="/" element={<Navigate to={"/listings"} />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/listings" element={<HomePage />} />
+          <Route path="/listings/search" element={<HomePage />} />
+          <Route path="/listings/new" element={<NewListingPage />} />
+          <Route path="/auth" element={<AuthPage />} />
+          <Route path="/*" element={<Navigate to={"/"} />} />
+        </Routes>
+      </Layout>
     </>
   );
 }

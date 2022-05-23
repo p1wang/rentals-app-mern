@@ -3,7 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import MessageForm from "./Forms/MessageForm";
 
 import Listing from "./Listing";
-import EditListingForm from "./Forms/EditListingForm";
+import EditListingForm from "./Forms/UpdateListingForm";
 
 const Listings = ({ listings, status }) => {
   const [showMessageForm, setShowMessageForm] = useState(false);

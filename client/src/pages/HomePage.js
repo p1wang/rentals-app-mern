@@ -16,18 +16,19 @@ const HomePage = () => {
   );
 
   let [searchParams, setSearchParams] = useSearchParams();
+  let currentParams = Object.fromEntries([...searchParams]);
 
-  const currentParams = Object.fromEntries([...searchParams]);
+  let location = useLocation();
 
-  const location = useLocation();
-
-  const { pathname } = useLocation();
-
-  console.log(currentParams);
+  let { pathname } = useLocation();
 
   useEffect(() => {
     pathname === "/listings" &&
-      dispatch(getListings({ searchQuery: currentParams }));
+      dispatch(
+        getListings({
+          searchQuery: currentParams,
+        })
+      );
     pathname === "/listings/search" &&
       dispatch(getListingsByQuery({ searchQuery: currentParams }));
   }, [location]);

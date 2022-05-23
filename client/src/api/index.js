@@ -30,10 +30,11 @@ export const getListingsByQuery = (searchQuery) =>
 export const getListing = (id) => API.get(`/listings/${id}`);
 export const createListing = (newListing) => API.post("/listings", newListing);
 export const deleteListing = (id) => API.delete(`/listings/${id}`);
-export const updateListing = (id, updatedListing) =>
-  API.patch(`/listings/${id}`, updatedListing);
+export const updateListing = (id, update) =>
+  API.patch(`/listings/${id}`, update);
 export const likeListing = (id) => API.patch(`/listings/${id}/likes`);
 
 //users
 export const signUp = (formData) => API.post("/users/signup", formData);
 export const signIn = (formData) => API.post("/users/signin", formData);
+export const updateUser = (id, update) => API.patch(`/users/${id}`, update);

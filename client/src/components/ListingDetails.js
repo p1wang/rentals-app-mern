@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { Carousel, Col, Container, Row } from "react-bootstrap";
-
-import { Context } from "../App";
+import { useSelector } from "react-redux";
 
 const images = [
   {
@@ -31,8 +30,7 @@ const images = [
 ];
 
 const ListingDetails = () => {
-  const { currentListing } = useContext(Context);
-  console.log(currentListing);
+  const { currentListing } = useSelector((state) => state.listings);
 
   return (
     <>

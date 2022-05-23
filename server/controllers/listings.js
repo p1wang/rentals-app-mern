@@ -16,12 +16,12 @@ export const createListing = async (req, res) => {
       ...listing,
       creator: req.userId,
       creatorEmail: req.userEmail,
-      createdAt: new Date().toISOString(),
     });
     await newListing.save();
+
     res.status(200).json(newListing);
   } catch (error) {
-    res.status(404).json({ message: "Something went wrong" });
+    res.status(404).json({ error });
   }
 };
 
@@ -40,7 +40,7 @@ export const getListings = async (req, res) => {
 
     res.status(200).json({ totalPages: Math.ceil(total / limit), listings });
   } catch (error) {
-    res.status(404).json({ message: "Something went wrong" });
+    res.status(404).json({ error });
   }
 };
 
@@ -56,7 +56,7 @@ export const getListing = async (req, res) => {
     const listing = await ListingModel.findById(id);
     res.status(200).json(listing);
   } catch (error) {
-    res.status(404).json({ message: "Something went wrong" });
+    res.status(404).json({ error });
   }
 };
 
@@ -79,7 +79,7 @@ export const deleteListing = async (req, res) => {
 
     res.status(200).json(id);
   } catch (error) {
-    res.status(404).json({ message: "Something went wrong" });
+    res.status(404).json({ error });
   }
 };
 
@@ -87,6 +87,8 @@ export const deleteListing = async (req, res) => {
 export const updateListing = async (req, res) => {
   const { id } = req.params;
   const update = req.body;
+
+  console.log(update);
 
   try {
     const existingUser = await UserModel.findOne({ _id: req.userId });
@@ -103,7 +105,7 @@ export const updateListing = async (req, res) => {
 
     res.status(200).json(updatedListing);
   } catch (error) {
-    res.status(404).json({ message: "Something went wrong" });
+    res.status(404).json({ error });
   }
 };
 
@@ -145,7 +147,7 @@ export const likeListing = async (req, res) => {
 
     res.status(200).json(updatedListing);
   } catch (error) {
-    res.status(404).json({ message: "Something went wrong" });
+    res.status(404).json({ error });
   }
 };
 
@@ -162,7 +164,7 @@ export const getListingsByUser = async (req, res) => {
     const userListings = await ListingModel.find({ creator: id });
     res.status(200).json(userListings);
   } catch (error) {
-    res.status(404).json({ message: "Something went wrong" });
+    res.status(404).json({ error });
   }
 };
 
@@ -179,7 +181,7 @@ export const getLikedListings = async (req, res) => {
     const likedListings = await ListingModel.find({ likes: id });
     res.status(200).json(likedListings);
   } catch (error) {
-    res.status(404).json({ message: "Something went wrong" });
+    res.status(404).json({ error });
   }
 };
 
@@ -241,6 +243,6 @@ export const getListingsByQuery = async (req, res) => {
       .status(200)
       .json({ totalPages: Math.ceil(total / limit), limitedFilteredListings });
   } catch (error) {
-    res.status(404).json({ message: "Something went wrong" });
+    res.status(404).json({ error });
   }
 };

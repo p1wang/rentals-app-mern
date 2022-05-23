@@ -14,8 +14,6 @@ export const getListings = createAsyncThunk(
   "listings/getListings",
   async ({ searchQuery }) => {
     const { data } = await api.getListings(searchQuery);
-    console.log(data);
-
     return data;
   }
 );
@@ -32,14 +30,16 @@ export const deleteListing = createAsyncThunk(
   "listings/deleteListing",
   async ({ id }) => {
     const { data } = await api.deleteListing(id);
+
     return data;
   }
 );
 
 export const updateListing = createAsyncThunk(
   "listings/updateListing",
-  async ({ id, updatedListing }) => {
-    const { data } = await api.updateListing(id, updatedListing);
+  async ({ id, update }) => {
+    const { data } = await api.updateListing(id, update);
+    console.log(data);
     return data;
   }
 );
@@ -80,152 +80,178 @@ export const getListingsByQuery = createAsyncThunk(
 export const listingsSlice = createSlice({
   name: "listings",
   initialState: {
-    listing: {},
+    listing: null,
     listings: [],
+    currentListing: null,
     totalPages: "",
     userListings: [],
     likedListings: [],
+    alert: null,
     status: "idle",
   },
   reducers: {
     resetListingsState: (state) => {
-      state.listing = {};
-      state.listings = [];
-      state.totalPages = "";
-      state.userListings = [];
-      state.likedListings = [];
-      state.status = "idle";
+      return {
+        ...state,
+        listing: null,
+        currentListing: null,
+        listings: [],
+        totalPages: "",
+        userListings: [],
+        likedListings: [],
+        alert: null,
+        status: "idle",
+      };
+    },
+    setCurrentListing: (state, action) => {
+      return { ...state, currentListing: action.payload };
     },
   },
 
   extraReducers: {
     // createListing
     [createListing.pending]: (state) => {
-      state.status = "pending";
+      return { ...state, status: "pending" };
     },
     [createListing.rejected]: (state) => {
-      state.status = "rejected";
+      return { ...state, status: "rejected" };
     },
     [createListing.fulfilled]: (state, action) => {
-      state.status = "fulfilled";
-      state.listings = [...state.listings, action.payload];
+      return {
+        ...state,
+        status: "fulfilled",
+        alert: { variant: "success", message: "Listing successfully created!" },
+        listings: action.payload,
+      };
     },
     // getListings
     [getListings.pending]: (state) => {
-      state.status = "pending";
+      return { ...state, status: "pending" };
     },
     [getListings.rejected]: (state) => {
-      state.status = "rejected";
+      return { ...state, status: "rejected" };
     },
     [getListings.fulfilled]: (state, action) => {
-      state.status = "fulfilled";
-      state.listings = action.payload.listings;
-      state.totalPages = action.payload.totalPages;
+      return {
+        ...state,
+        status: "fulfilled",
+        listings: action.payload.listings,
+        totalPages: action.payload.totalPages,
+      };
     },
     // getListing
     [getListing.pending]: (state) => {
-      state.status = "pending";
+      return { ...state, status: "pending" };
     },
     [getListing.rejected]: (state) => {
-      state.status = "rejected";
+      return { ...state, status: "rejected" };
     },
     [getListing.fulfilled]: (state, action) => {
-      state.status = "fulfilled";
-      state.listing = action.payload;
+      return { ...state, status: "fulfilled", listing: action.payload };
     },
     // deleteListing
     [deleteListing.pending]: (state) => {
-      state.status = "pending";
+      return { ...state, status: "pending" };
     },
     [deleteListing.rejected]: (state) => {
-      state.status = "rejected";
+      return { ...state, status: "rejected" };
     },
     [deleteListing.fulfilled]: (state, action) => {
-      state.status = "fulfilled";
-      state.listings = state.listings.filter(
-        (listing) => listing._id !== action.payload
-      );
-      state.userListings = state.userListings.filter(
-        (listing) => listing._id !== action.payload
-      );
-      state.likedListings = state.likedListings.filter(
-        (listing) => listing._id !== action.payload
-      );
+      return {
+        ...state,
+        status: "fulfilled",
+        alert: { variant: "success", message: "Listing successfully deleted!" },
+        listings: state.listings.filter(
+          (listing) => listing._id !== action.payload
+        ),
+        userListings: state.userListings.filter(
+          (listing) => listing._id !== action.payload
+        ),
+        likedListings: state.likedListings.filter(
+          (listing) => listing._id !== action.payload
+        ),
+      };
     },
     // updateListing
     [updateListing.pending]: (state) => {
-      state.status = "pending";
+      return { ...state, status: "pending" };
     },
     [updateListing.rejected]: (state) => {
-      state.status = "rejected";
+      return { ...state, status: "rejected" };
     },
     [updateListing.fulfilled]: (state, action) => {
-      state.status = "fulfilled";
-      state.listings = state.listings.map((listing) =>
-        listing._id === action.payload._id ? action.payload : listing
-      );
+      return {
+        ...state,
+        status: "fulfilled",
+        alert: { variant: "success", message: "Listing successfully updated!" },
+        listings: state.listings.map((listing) =>
+          listing._id === action.payload._id ? action.payload : listing
+        ),
+      };
     },
     // likeListing
     [likeListing.pending]: (state) => {
-      // state.status = "pending";
+      // return { ...state, status: "pending" };
     },
     [likeListing.rejected]: (state) => {
-      // state.status = "rejected";
+      return { ...state, status: "rejected" };
     },
     [likeListing.fulfilled]: (state, action) => {
-      // state.status = "fulfilled";
-      state.listings = state.listings.map((listing) =>
-        listing._id === action.payload._id ? action.payload : listing
-      );
-      state.userListings = state.userListings.map((listing) =>
-        listing._id === action.payload._id ? action.payload : listing
-      );
-      state.likedListings = state.likedListings.filter(
-        (listing) => listing._id !== action.payload._id
-      );
+      return {
+        ...state,
+        status: "fulfilled",
+        listings: state.listings.map((listing) =>
+          listing._id === action.payload._id ? action.payload : listing
+        ),
+        userListings: state.userListings.map((listing) =>
+          listing._id === action.payload._id ? action.payload : listing
+        ),
+        likedListings: state.likedListings.filter(
+          (listing) => listing._id !== action.payload._id
+        ),
+      };
     },
 
     // getListingsByUser
     [getListingsByUser.pending]: (state) => {
-      state.status = "pending";
+      return { ...state, status: "pending" };
     },
     [getListingsByUser.rejected]: (state) => {
-      state.status = "rejected";
+      return { ...state, status: "rejected" };
     },
     [getListingsByUser.fulfilled]: (state, action) => {
-      state.status = "fulfilled";
-      state.userListings = action.payload;
+      return { ...state, status: "fulfilled", userListings: action.payload };
     },
 
     // getLikedListings
     [getLikedListings.pending]: (state) => {
-      state.status = "pending";
+      return { ...state, status: "pending" };
     },
     [getLikedListings.rejected]: (state) => {
-      state.status = "rejected";
+      return { ...state, status: "rejected" };
     },
     [getLikedListings.fulfilled]: (state, action) => {
-      state.status = "fulfilled";
-      state.likedListings = action.payload;
+      return { ...state, status: "fulfilled", likedListings: action.payload };
     },
 
     // getListingsByQuery
-
     [getListingsByQuery.pending]: (state) => {
-      state.status = "pending";
+      return { ...state, status: "pending" };
     },
     [getListingsByQuery.rejected]: (state) => {
-      state.status = "rejected";
+      return { ...state, status: "rejected" };
     },
     [getListingsByQuery.fulfilled]: (state, action) => {
-      state.status = "fulfilled";
-      state.totalPages = action.payload.totalPages;
-      state.listings = action.payload.limitedFilteredListings;
-      state.status = "fulfilled";
+      return {
+        ...state,
+        status: "fulfilled",
+        totalPages: action.payload.totalPages,
+        listings: action.payload.limitedFilteredListings,
+      };
     },
   },
 });
 
-export const { resetListingsState } = listingsSlice.actions;
+export const { resetListingsState, setCurrentListing } = listingsSlice.actions;
 
 export default listingsSlice.reducer;

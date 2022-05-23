@@ -3,10 +3,8 @@ import { Form, Button, InputGroup } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Context } from "../../App";
 import { signIn, signUp } from "../../redux/authSlice";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
-import useShowAlert from "../../hooks/useShowAlert";
 
 const AuthForm = () => {
   const { user, status } = useSelector((state) => ({ ...state.auth }));
@@ -14,13 +12,6 @@ const AuthForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showPass, setShowPass] = useState(false);
-  const showAlert = useShowAlert();
-
-  useEffect(() => {
-    if (user && status === "fulfilled") {
-      showAlert("success", `Welcome, ${user?.result.name}`);
-    }
-  }, [user]);
 
   const {
     register,
@@ -34,7 +25,6 @@ const AuthForm = () => {
     isSignUp
       ? dispatch(signUp({ formData, navigate }))
       : dispatch(signIn({ formData, navigate }));
-    reset();
   };
 
   return (
