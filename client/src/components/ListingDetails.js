@@ -1,36 +1,12 @@
-import React, { useContext } from "react";
-import { Carousel, Col, Container, Row } from "react-bootstrap";
+import React from "react";
+import { Carousel, Col, Container, Image, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
-const images = [
-  {
-    id: 1,
-    url: "https://images7.alphacoders.com/341/341714.jpg",
-  },
-  {
-    id: 2,
-    url: "https://images2.alphacoders.com/643/64302.jpg",
-  },
-  {
-    id: 3,
-    url: "https://images6.alphacoders.com/872/872806.jpg",
-  },
-  {
-    id: 4,
-    url: "https://images2.alphacoders.com/695/695625.jpg",
-  },
-  {
-    id: 5,
-    url: "https://images7.alphacoders.com/341/341475.jpg",
-  },
-  {
-    id: 6,
-    url: "https://images2.alphacoders.com/849/849252.jpg",
-  },
-];
+import defaultPfp from "../assets/images/default-pfp.jpeg";
 
 const ListingDetails = () => {
   const { currentListing } = useSelector((state) => state.listings);
+  const { user } = useSelector((state) => state.users);
 
   return (
     <>
@@ -92,7 +68,20 @@ const ListingDetails = () => {
         <Row className="m-2 border-bottom">
           <Col>
             <span className="fs-5 ">Contact:</span>
-            <p className="fw-light">{currentListing.creatorEmail}</p>
+            <div className="d-flex align-items-center">
+              <Image
+                src={
+                  user?.result?.profilePic
+                    ? user?.result?.profilePic
+                    : defaultPfp
+                }
+                width="40px"
+                roundedCircle
+                alt="profile pic"
+                className="me-4"
+              />
+              <span className="fw-light">{currentListing.creatorEmail}</span>
+            </div>
           </Col>
         </Row>
       </Container>

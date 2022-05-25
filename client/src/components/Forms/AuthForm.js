@@ -1,17 +1,38 @@
 import React, { useEffect, useState } from "react";
-import { Form, Button, InputGroup } from "react-bootstrap";
+import { Form, Button, InputGroup, Row, Container, Col } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { signIn, signUp } from "../../redux/authSlice";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 
+
+import { signIn, signUp } from "../../redux/usersSlice";
+import { setAlert } from "../../redux/alertSlice";
+
 const AuthForm = () => {
-  const { user, status } = useSelector((state) => ({ ...state.auth }));
+  const { user } = useSelector((state) => state.users);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [showPass, setShowPass] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [showPass, setShowPass] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      isSignUp
+        ? dispatch(
+            setAlert({
+              variant: "success",
+              message: `Welcome ${user?.result?.name}!`,
+            })
+          )
+        : dispatch(
+            setAlert({
+              variant: "success",
+              message: `Welcome back ${user?.result?.name}!`,
+            })
+          );
+    }
+  }, [user]);
 
   const {
     register,
@@ -24,119 +45,167 @@ const AuthForm = () => {
   const onSubmit = (formData) => {
     isSignUp
       ? dispatch(signUp({ formData, navigate }))
-      : dispatch(signIn({ formData, navigate }));
+          .unwrap()
+          .then(() => {
+            return;
+          })
+          .catch((rejectedValueOrSerializedError) => {
+            dispatch(
+              setAlert({
+                variant: "danger",
+                message: "Something went wrong, please try again.",
+              })
+            );
+          })
+      : dispatch(signIn({ formData, navigate }))
+          .unwrap()
+          .then(() => {
+            return;
+          })
+          .catch((rejectedValueOrSerializedError) => {
+            dispatch(
+              setAlert({
+                variant: "danger",
+                message: "Incorrect password or email, please try again.",
+              })
+            );
+          });
+
+    reset();
   };
 
   return (
-    <Form
-      style={{ margin: "auto", maxWidth: "350px" }}
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Email address</Form.Label>
-        {/* email */}
-        <Form.Control
-          {...register("email")}
-          required
-          type="email"
-          autoFocus
-          placeholder="Enter email"
-        />
-      </Form.Group>
-      {isSignUp && (
-        <div className="d-flex">
-          {/* first name */}
-          <Form.Group className="mb-3 me-3" controlId="formBasicFirstName">
-            <Form.Label>First Name</Form.Label>
+    <Container>
+      <Form
+        style={{ margin: "auto", maxWidth: "350px" }}
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <Row>
+          <Form.Group controlId="formBasicEmail">
+            <Form.Label>
+              Email address <span className="required text-danger">*</span>
+            </Form.Label>
+            {/* email */}
             <Form.Control
-              {...register("firstName")}
+              {...register("email")}
               required
-              type="text"
-              placeholder="First Name"
+              type="email"
+              autoFocus
+              placeholder="Enter email"
             />
           </Form.Group>
-          {/* last name */}
-          <Form.Group className="mb-3" controlId="formBasicLastName">
-            <Form.Label>Last Name</Form.Label>
-            <Form.Control
-              {...register("lastName")}
-              required
-              type="text"
-              placeholder="Last Name"
-            />
-          </Form.Group>
-        </div>
-      )}
-      {/* password */}
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
-        <InputGroup className="mb-3">
-          <Form.Control
-            {...register("password")}
-            required
-            minLength="6"
-            maxLength="20"
-            type={showPass ? "text" : "password"}
-            placeholder="Password"
-          />
-          <InputGroup.Text
-            id="toggle-password-visibility"
-            onClick={() => setShowPass(!showPass)}
-          >
-            {showPass ? <BsEyeSlash size={24} /> : <BsEye size={24} />}
-          </InputGroup.Text>
-        </InputGroup>
-      </Form.Group>
-
-      {isSignUp && (
-        // confirm password
-        <Form.Group className="mb-3" controlId="formBasicConfirmPassword">
-          <Form.Label>Confirm Password</Form.Label>
-          <Form.Control
-            {...register("confirmPassword", {
-              validate: (value) =>
-                value === watch("password") || "Passwords do not match",
-            })}
-            required
-            minLength="6"
-            maxLength="20"
-            type="password"
-            placeholder="Confirm password"
-          />
-          <p className="text-danger">
-            {errors.confirmPassword?.type === "validate" &&
-              errors.confirmPassword.message}
-          </p>
-        </Form.Group>
-      )}
-
-      <div className="d-flex justify-content-between">
-        {isSignUp ? (
-          <Button
-            variant="light"
-            className="shadow-none m-0 p-0 border-0 bg-transparent "
-            onClick={() => {
-              setIsSignUp(false);
-            }}
-          >
-            Already have an account?
-          </Button>
-        ) : (
-          <Button
-            variant="light"
-            className="shadow-none m-0 p-0 border-0 bg-transparent "
-            onClick={() => {
-              setIsSignUp(true);
-            }}
-          >
-            Don't have an account yet?
-          </Button>
+        </Row>
+        {isSignUp && (
+          <Row className="mt-2">
+            {/* first name */}
+            <Col>
+              <Form.Group controlId="formBasicFirstName">
+                <Form.Label>
+                  First Name <span className="required text-danger">*</span>
+                </Form.Label>
+                <Form.Control
+                  {...register("firstName")}
+                  required
+                  type="text"
+                  placeholder="First Name"
+                />
+              </Form.Group>
+            </Col>
+            {/* last name */}
+            <Col>
+              <Form.Group controlId="formBasicLastName">
+                <Form.Label>
+                  Last Name <span className="required text-danger">*</span>
+                </Form.Label>
+                <Form.Control
+                  {...register("lastName")}
+                  required
+                  type="text"
+                  placeholder="Last Name"
+                />
+              </Form.Group>
+            </Col>
+          </Row>
         )}
-        <Button variant="primary" type="submit">
-          Submit
-        </Button>
-      </div>
-    </Form>
+        {/* password */}
+        <Row className="mt-2">
+          <Form.Group controlId="formBasicPassword">
+            <Form.Label>
+              Password <span className="required text-danger">*</span>
+            </Form.Label>
+            <InputGroup>
+              <Form.Control
+                {...register("password")}
+                required
+                minLength="6"
+                maxLength="20"
+                type={showPass ? "text" : "password"}
+                placeholder="Password"
+              />
+              <InputGroup.Text
+                id="toggle-password-visibility"
+                onClick={() => setShowPass(!showPass)}
+              >
+                {showPass ? <BsEyeSlash size={24} /> : <BsEye size={24} />}
+              </InputGroup.Text>
+            </InputGroup>
+          </Form.Group>
+        </Row>
+
+        {isSignUp && (
+          // confirm password
+          <Row className="mt-2">
+            <Form.Group controlId="formBasicConfirmPassword">
+              <Form.Label>
+                Confirm Password <span className="required text-danger">*</span>
+              </Form.Label>
+              <Form.Control
+                {...register("confirmPassword", {
+                  validate: (value) =>
+                    value === watch("password") || "Passwords do not match",
+                })}
+                required
+                minLength="6"
+                maxLength="20"
+                type="password"
+                placeholder="Confirm password"
+              />
+              {errors.confirmPassword?.type === "validate" && (
+                <p className="text-danger">errors.confirmPassword.message </p>
+              )}
+            </Form.Group>
+          </Row>
+        )}
+
+        <div className="d-flex justify-content-between mt-3">
+          {isSignUp ? (
+            <Button
+              variant="light"
+              className="shadow-none m-0 p-0 border-0 bg-transparent "
+              onClick={() => {
+                setIsSignUp(false);
+              }}
+            >
+              Already have an account?
+            </Button>
+          ) : (
+            <Button
+              variant="light"
+              className="shadow-none m-0 p-0 border-0 bg-transparent "
+              onClick={() => {
+                setIsSignUp(true);
+              }}
+            >
+              Don't have an account yet?
+            </Button>
+          )}
+
+          <Button variant="primary" type="submit">
+            Submit
+          </Button>
+        </div>
+      </Form>
+    </Container>
   );
 };
 

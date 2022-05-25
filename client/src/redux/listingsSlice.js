@@ -13,6 +13,7 @@ export const createListing = createAsyncThunk(
 export const getListings = createAsyncThunk(
   "listings/getListings",
   async ({ searchQuery }) => {
+    console.log(searchQuery);
     const { data } = await api.getListings(searchQuery);
     return data;
   }
@@ -30,7 +31,6 @@ export const deleteListing = createAsyncThunk(
   "listings/deleteListing",
   async ({ id }) => {
     const { data } = await api.deleteListing(id);
-
     return data;
   }
 );
@@ -39,7 +39,6 @@ export const updateListing = createAsyncThunk(
   "listings/updateListing",
   async ({ id, update }) => {
     const { data } = await api.updateListing(id, update);
-    console.log(data);
     return data;
   }
 );
@@ -71,7 +70,6 @@ export const getLikedListings = createAsyncThunk(
 export const getListingsByQuery = createAsyncThunk(
   "listings/getListingsByQuery",
   async ({ searchQuery }) => {
-    console.log(searchQuery);
     const { data } = await api.getListingsByQuery(searchQuery);
     return data;
   }
@@ -86,172 +84,147 @@ export const listingsSlice = createSlice({
     totalPages: "",
     userListings: [],
     likedListings: [],
-    alert: null,
-    status: "idle",
+    isLoading: false,
   },
   reducers: {
-    resetListingsState: (state) => {
-      return {
-        ...state,
-        listing: null,
-        currentListing: null,
-        listings: [],
-        totalPages: "",
-        userListings: [],
-        likedListings: [],
-        alert: null,
-        status: "idle",
-      };
-    },
     setCurrentListing: (state, action) => {
-      return { ...state, currentListing: action.payload };
+      state.currentListing = action.payload;
     },
   },
 
   extraReducers: {
     // createListing
     [createListing.pending]: (state) => {
-      return { ...state, status: "pending" };
+      state.isLoading = true;
     },
     [createListing.rejected]: (state) => {
-      return { ...state, status: "rejected" };
+      state.isLoading = false;
     },
     [createListing.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        status: "fulfilled",
-        alert: { variant: "success", message: "Listing successfully created!" },
-        listings: action.payload,
-      };
+      state.isLoading = false;
+      state.listings = [...state.listings, action.payload];
     },
     // getListings
     [getListings.pending]: (state) => {
-      return { ...state, status: "pending" };
+      state.isLoading = true;
     },
     [getListings.rejected]: (state) => {
-      return { ...state, status: "rejected" };
+      state.isLoading = false;
     },
     [getListings.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        status: "fulfilled",
-        listings: action.payload.listings,
-        totalPages: action.payload.totalPages,
-      };
+      state.isLoading = false;
+      state.listings = action.payload.listings;
+      state.totalPages = action.payload.totalPages;
     },
     // getListing
     [getListing.pending]: (state) => {
-      return { ...state, status: "pending" };
+      state.isLoading = true;
     },
     [getListing.rejected]: (state) => {
-      return { ...state, status: "rejected" };
+      state.isLoading = false;
     },
     [getListing.fulfilled]: (state, action) => {
-      return { ...state, status: "fulfilled", listing: action.payload };
+      state.isLoading = false;
+      state.listing = action.payload;
     },
     // deleteListing
     [deleteListing.pending]: (state) => {
-      return { ...state, status: "pending" };
+      // state.isLoading = true;
     },
-    [deleteListing.rejected]: (state) => {
-      return { ...state, status: "rejected" };
+    [deleteListing.rejected]: (state, action) => {
+      state.isLoading = false;
     },
     [deleteListing.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        status: "fulfilled",
-        alert: { variant: "success", message: "Listing successfully deleted!" },
-        listings: state.listings.filter(
-          (listing) => listing._id !== action.payload
-        ),
-        userListings: state.userListings.filter(
-          (listing) => listing._id !== action.payload
-        ),
-        likedListings: state.likedListings.filter(
-          (listing) => listing._id !== action.payload
-        ),
-      };
+      state.isLoading = false;
+      state.listings = state.listings.filter(
+        (listing) => listing._id !== action.payload
+      );
+      state.userListings = state.userListings.filter(
+        (listing) => listing._id !== action.payload
+      );
+      state.likedListings = state.likedListings.filter(
+        (listing) => listing._id !== action.payload
+      );
     },
     // updateListing
     [updateListing.pending]: (state) => {
-      return { ...state, status: "pending" };
+      state.isLoading = true;
     },
     [updateListing.rejected]: (state) => {
-      return { ...state, status: "rejected" };
+      state.isLoading = false;
     },
     [updateListing.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        status: "fulfilled",
-        alert: { variant: "success", message: "Listing successfully updated!" },
-        listings: state.listings.map((listing) =>
-          listing._id === action.payload._id ? action.payload : listing
-        ),
-      };
+      state.isLoading = false;
+      state.listings = state.listings.map((listing) =>
+        listing._id === action.payload._id ? action.payload : listing
+      );
+      state.userListings = state.userListings.map((listing) =>
+        listing._id === action.payload._id ? action.payload : listing
+      );
+      state.likedListings = state.likedListings.map((listing) =>
+        listing._id === action.payload._id ? action.payload : listing
+      );
     },
     // likeListing
     [likeListing.pending]: (state) => {
-      // return { ...state, status: "pending" };
+      // state.isLoading = true;
     },
     [likeListing.rejected]: (state) => {
-      return { ...state, status: "rejected" };
+      state.isLoading = false;
     },
     [likeListing.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        status: "fulfilled",
-        listings: state.listings.map((listing) =>
-          listing._id === action.payload._id ? action.payload : listing
-        ),
-        userListings: state.userListings.map((listing) =>
-          listing._id === action.payload._id ? action.payload : listing
-        ),
-        likedListings: state.likedListings.filter(
-          (listing) => listing._id !== action.payload._id
-        ),
-      };
+      state.isLoading = false;
+      state.listings = state.listings.map((listing) =>
+        listing._id === action.payload._id ? action.payload : listing
+      );
+      state.userListings = state.userListings.map((listing) =>
+        listing._id === action.payload._id ? action.payload : listing
+      );
+
+      state.likedListings = state.likedListings.filter(
+        (listing) => listing._id !== action.payload._id
+      );
     },
 
     // getListingsByUser
     [getListingsByUser.pending]: (state) => {
-      return { ...state, status: "pending" };
+      state.isLoading = true;
     },
     [getListingsByUser.rejected]: (state) => {
-      return { ...state, status: "rejected" };
+      state.isLoading = false;
     },
     [getListingsByUser.fulfilled]: (state, action) => {
-      return { ...state, status: "fulfilled", userListings: action.payload };
+      state.isLoading = false;
+      state.userListings = action.payload;
     },
 
     // getLikedListings
     [getLikedListings.pending]: (state) => {
-      return { ...state, status: "pending" };
+      state.isLoading = true;
     },
     [getLikedListings.rejected]: (state) => {
-      return { ...state, status: "rejected" };
+      state.isLoading = false;
     },
     [getLikedListings.fulfilled]: (state, action) => {
-      return { ...state, status: "fulfilled", likedListings: action.payload };
+      state.isLoading = false;
+      state.likedListings = action.payload;
     },
 
     // getListingsByQuery
     [getListingsByQuery.pending]: (state) => {
-      return { ...state, status: "pending" };
+      state.isLoading = true;
     },
     [getListingsByQuery.rejected]: (state) => {
-      return { ...state, status: "rejected" };
+      state.isLoading = false;
     },
     [getListingsByQuery.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        status: "fulfilled",
-        totalPages: action.payload.totalPages,
-        listings: action.payload.limitedFilteredListings,
-      };
+      state.isLoading = false;
+      state.totalPages = action.payload.totalPages;
+      state.listings = action.payload.limitedFilteredListings;
     },
   },
 });
 
-export const { resetListingsState, setCurrentListing } = listingsSlice.actions;
+export const { setCurrentListing } = listingsSlice.actions;
 
 export default listingsSlice.reducer;

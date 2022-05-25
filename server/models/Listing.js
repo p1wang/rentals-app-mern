@@ -11,9 +11,10 @@ const listingSchema = mongoose.Schema(
     price: String,
     description: String,
     creatorEmail: String,
-    images: { type: [String], default: [] },
+    creatorPfp: String,
+    images: [String],
     creator: String,
-    likes: { type: [String], default: [] },
+    likes: [String],
   },
   { timestamps: true }
 );

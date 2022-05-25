@@ -3,7 +3,7 @@ import * as api from "../api";
 
 // actions
 export const signUp = createAsyncThunk(
-  "auth/signUp",
+  "users/signUp",
   async ({ formData, navigate }) => {
     const { data } = await api.signUp(formData);
     navigate("/");
@@ -12,7 +12,7 @@ export const signUp = createAsyncThunk(
 );
 
 export const signIn = createAsyncThunk(
-  "auth/signIn",
+  "users/signIn",
   async ({ formData, navigate }) => {
     const { data } = await api.signIn(formData);
     navigate("/");
@@ -21,87 +21,80 @@ export const signIn = createAsyncThunk(
 );
 
 export const updateUser = createAsyncThunk(
-  "auth/updateUser",
+  "users/updateUser",
   async ({ id, update }) => {
     const { data } = await api.updateUser(id, update);
-
     return data;
   }
 );
 
-export const authSlice = createSlice({
-  name: "auth",
-  // initial state
+export const sendMessage = createAsyncThunk(
+  "users/sendMessage",
+  async ({ id, message }) => {
+    const { data } = await api.sendMessage(id, message);
+    return data;
+  }
+);
+
+export const usersSlice = createSlice({
+  name: "users",
   initialState: {
     user: null,
-    alert: null,
-    status: "idle",
+    isLoading: false,
   },
-  // reducer object
   reducers: {
     setUser: (state, action) => {
-      return { ...state, user: action.payload };
+      state.user = action.payload;
     },
     setLogout: (state) => {
       localStorage.clear();
-      return { ...state, user: null, status: "idle" };
+      state.user = null;
+      state.isLoading = false;
     },
   },
   extraReducers: {
     // signup
     [signUp.pending]: (state) => {
-      return { ...state, status: "pending" };
+      state.isLoading = true;
     },
     [signUp.rejected]: (state) => {
-      return { ...state, status: "rejected" };
+      state.isLoading = false;
     },
     [signUp.fulfilled]: (state, action) => {
       localStorage.setItem("profile", JSON.stringify({ ...action.payload }));
-      return {
-        ...state,
-        status: "fulfilled",
-        user: action.payload,
-        alert: { variant: "success", message: "Welcome!" },
-      };
+      state.isLoading = false;
+      state.user = action.payload;
     },
 
     //signin
     [signIn.pending]: (state) => {
-      return { ...state, status: "pending" };
+      state.isLoading = true;
     },
     [signIn.rejected]: (state) => {
-      return { ...state, status: "rejected" };
+      state.isLoading = false;
     },
     [signIn.fulfilled]: (state, action) => {
       localStorage.setItem("profile", JSON.stringify({ ...action.payload }));
-      return {
-        ...state,
-        status: "fulfilled",
-        user: action.payload,
-        alert: { variant: "success", message: "Welcome" },
-      };
+      state.user = action.payload;
     },
 
     // updateUser
     [updateUser.pending]: (state) => {
-      return { ...state, status: "pending" };
+      state.isLoading = true;
     },
     [updateUser.rejected]: (state) => {
-      return { ...state, status: "rejected" };
+      state.isLoading = false;
     },
     [updateUser.fulfilled]: (state, action) => {
       localStorage.setItem("profile", JSON.stringify({ ...action.payload }));
-
-      return {
-        ...state,
-        status: "fulfilled",
-        user: action.payload,
-        alert: { variant: "success", message: "Profile successfully updated!" },
-      };
+      state.isLoading = false;
+      state.user = action.payload;
     },
+
+    // sendMessage
   },
 });
 
-export const { setUser, setLogout } = authSlice.actions;
+export const { setUser, setLogout } = usersSlice.actions;
 
-export default authSlice.reducer;
+export default usersSlice.reducer;

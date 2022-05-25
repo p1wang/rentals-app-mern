@@ -1,5 +1,6 @@
 import React from "react";
-import { Pagination } from "react-bootstrap";
+import { Button, Form, FormControl, Pagination } from "react-bootstrap";
+import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 
 const PaginationComp = ({ totalPages }) => {
@@ -9,12 +10,17 @@ const PaginationComp = ({ totalPages }) => {
     searchParams.get("page") ? searchParams.get("page") : 1
   );
   const currentParams = Object.fromEntries([...searchParams]);
+  const { register, handleSubmit, reset } = useForm();
 
   const handlePageSelect = (action, index) => {
     setSearchParams({
       ...currentParams,
       page: getNewpage(action, index),
     });
+  };
+
+  const onSubmit = (formData) => {
+    handlePageSelect("current", formData.pageNumber);
   };
 
   const getNewpage = (action, index) => {
@@ -35,23 +41,41 @@ const PaginationComp = ({ totalPages }) => {
   };
 
   return (
-    <Pagination className="d-flex justify-content-center mt-5">
-      <Pagination.First href="#" onClick={() => handlePageSelect("first")} />
-      <Pagination.Prev href="#" onClick={() => handlePageSelect("prev")} />
+    <>
+      <Pagination className="d-flex justify-content-center mt-5">
+        <Pagination.First href="#" onClick={() => handlePageSelect("first")} />
+        <Pagination.Prev href="#" onClick={() => handlePageSelect("prev")} />
 
-      {[...Array(totalPages)].map((item, index) => (
-        <Pagination.Item
-          active={index + 1 === currentPage}
-          href="#"
-          onClick={() => handlePageSelect("current", index + 1)}
-          key={index}
-        >
-          {index + 1}
-        </Pagination.Item>
-      ))}
-      <Pagination.Next href="#" onClick={() => handlePageSelect("next")} />
-      <Pagination.Last href="#" onClick={() => handlePageSelect("last")} />
-    </Pagination>
+        <Form className="d-flex" onSubmit={handleSubmit(onSubmit)}>
+          <FormControl
+            placeholder={currentPage}
+            aria-label="current-page"
+            {...register("pageNumber")}
+            type="number"
+            min="1"
+            style={{
+              width: "10ch",
+              boxShadow: "none",
+              borderRadius: 1,
+              borderLeft: "none",
+              borderRight: "none",
+              appearance: "none",
+            }}
+          />
+          <Button
+            type="submit"
+            style={{
+              borderRadius: 1,
+            }}
+          >
+            Go
+          </Button>
+        </Form>
+
+        <Pagination.Next href="#" onClick={() => handlePageSelect("next")} />
+        <Pagination.Last href="#" onClick={() => handlePageSelect("last")} />
+      </Pagination>
+    </>
   );
 };
 

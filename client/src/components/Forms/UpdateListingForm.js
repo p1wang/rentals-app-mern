@@ -1,5 +1,6 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
+
 import ListingForm from "./ListingForm";
 
 const UpdateListingForm = ({ showEditForm, setShowEditForm }) => {

@@ -1,11 +1,51 @@
 import React from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, Container, Row, Col } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 
-const MessageForm = ({ showMessageForm, setShowMessageForm }) => {
+import { setAlert } from "../../redux/alertSlice";
+import { sendMessage } from "../../redux/usersSlice";
+
+const MessageForm = ({
+  showMessageForm,
+  setShowMessageForm,
+  receiverId,
+  senderName,
+}) => {
+  const dispatch = useDispatch();
   const { register, handleSubmit, reset } = useForm();
+  const { user } = useSelector((state) => state.users);
 
   const onSubmit = (formData) => {
+    dispatch(
+      sendMessage({
+        id: receiverId,
+        message: {
+          ...formData,
+          senderPfp: user?.result?.profilePic,
+          senderName: senderName,
+        },
+      })
+    )
+      .unwrap()
+      .then(() => {
+        dispatch(
+          setAlert({
+            variant: "success",
+            message: "Message successfully sent!",
+          })
+        );
+      })
+      .catch((rejectedValueOrSerializedError) => {
+        dispatch(
+          setAlert({
+            variant: "danger",
+            message: "Something went wrong, please try again.",
+          })
+        );
+      });
+    setShowMessageForm(false);
+
     reset();
   };
 
@@ -20,74 +60,50 @@ const MessageForm = ({ showMessageForm, setShowMessageForm }) => {
           <Modal.Title>Send an inquiry</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={handleSubmit(onSubmit)}>
-            <div className="d-flex justify-content-between">
-              {/* name */}
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlInput1"
+          <Container>
+            <Form onSubmit={handleSubmit(onSubmit)}>
+              <Row className="mb-3">
+                <Col>
+                  <Form.Group controlId="message-title">
+                    <Form.Label>
+                      Title <span className="required text-danger">*</span>
+                    </Form.Label>
+                    <Form.Control
+                      {...register("messageTitle")}
+                      required
+                      type="text"
+                      placeholder="Send a message ..."
+                      rows={3}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row className="mb-3">
+                <Col>
+                  <Form.Group controlId="message-body">
+                    <Form.Label>
+                      Message <span className="required text-danger">*</span>
+                    </Form.Label>
+                    <Form.Control
+                      {...register("messageBody")}
+                      required
+                      type="text"
+                      placeholder="Send a message ..."
+                      as="textarea"
+                      rows={3}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Button
+                variant="primary"
+                type="submit"
+                className="d-block ms-auto mt-3"
               >
-                <Form.Label>
-                  Name <span className="required text-danger">*</span>
-                </Form.Label>
-                <Form.Control
-                  {...register("name")}
-                  required
-                  type="text"
-                  placeholder="Full Name"
-                  autoFocus
-                />
-              </Form.Group>
-              {/* phone number */}
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlInput1"
-              >
-                <Form.Label>
-                  Phone <span className="required text-danger">*</span>
-                </Form.Label>
-                <Form.Control
-                  {...register("phoneNumber")}
-                  required
-                  type="tel"
-                  pattern="[0-9]{10}"
-                  placeholder="Phone number"
-                />
-              </Form.Group>
-            </div>
-            {/* email */}
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>
-                Email <span className="required text-danger">*</span>
-              </Form.Label>
-              <Form.Control
-                {...register("email")}
-                required
-                type="email"
-                placeholder="name@example.com"
-              />
-            </Form.Group>
-            {/* message */}
-            <Form.Group
-              className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
-            >
-              <Form.Label>
-                Message <span className="required text-danger">*</span>
-              </Form.Label>
-              <Form.Control
-                {...register("message")}
-                required
-                type="text"
-                placeholder="Send a message ..."
-                as="textarea"
-                rows={3}
-              />
-            </Form.Group>
-            <Button variant="primary" type="submit" className="d-block ms-auto">
-              Submit
-            </Button>
-          </Form>
+                Submit
+              </Button>
+            </Form>
+          </Container>
         </Modal.Body>
       </Modal>
     </>

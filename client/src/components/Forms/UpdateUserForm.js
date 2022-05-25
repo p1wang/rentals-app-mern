@@ -1,28 +1,75 @@
 import React from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { updateUser } from "../../redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
+import { updateUser } from "../../redux/usersSlice";
 import convertToBase64 from "../../utils/convertToBase64";
+import { setAlert } from "../../redux/alertSlice";
 
 const UpdateUserForm = ({ showEditUserForm, setShowEditUserForm, target }) => {
-  const { register: registerPfp, handleSubmit: handlePfpSubmit } = useForm();
-  const { register: registerPass, handleSubmit: handlePassSubmit } = useForm();
-  const { register: registerName, handleSubmit: handleNameSubmit } = useForm();
-  const { user, status } = useSelector((state) => ({ ...state.auth }));
+  const { user } = useSelector((state) => state.users);
   const dispatch = useDispatch();
 
+  const {
+    register: registerPfp,
+    handleSubmit: handlePfpSubmit,
+    reset: resetPfp,
+  } = useForm();
+  const {
+    register: registerPass,
+    handleSubmit: handlePassSubmit,
+    reset: resetPass,
+  } = useForm();
+  const {
+    register: registerName,
+    handleSubmit: handleNameSubmit,
+    reset: resetName,
+  } = useForm();
+
   const onNameSubmit = (formData) => {
-    console.log(formData);
-    dispatch(updateUser({ id: user.result._id, update: formData }));
+    dispatch(updateUser({ id: user.result._id, update: formData }))
+      .unwrap()
+      .then(() => {
+        dispatch(
+          setAlert({
+            variant: "success",
+            message: "Name updated successfully!",
+          })
+        );
+      })
+      .catch((rejectedValueOrSerializedError) => {
+        dispatch(
+          setAlert({
+            variant: "danger",
+            message: "Unable to update name.",
+          })
+        );
+      });
     setShowEditUserForm(false);
+    resetName();
   };
 
   const onPassSubmit = (formData) => {
-    console.log(formData);
-    dispatch(updateUser({ id: user.result._id, update: formData }));
-    setShowEditUserForm(false);
+    dispatch(updateUser({ id: user.result._id, update: formData }))
+      .unwrap()
+      .then(() => {
+        dispatch(
+          setAlert({
+            variant: "success",
+            message: "Password updated successfully!",
+          })
+        );
+      })
+      .catch((rejectedValueOrSerializedError) => {
+        dispatch(
+          setAlert({
+            variant: "danger",
+            message: "Unable to update password.",
+          })
+        );
+      });
+    resetPass();
   };
 
   const onPfpSubmit = (formData) => {
@@ -34,8 +81,26 @@ const UpdateUserForm = ({ showEditUserForm, setShowEditUserForm, target }) => {
           update: { ...formData, profilePic: convertedImages },
         })
       )
+        .unwrap()
+        .then(() => {
+          dispatch(
+            setAlert({
+              variant: "success",
+              message: "Profile picture updated successfully!",
+            })
+          );
+        })
+        .catch((rejectedValueOrSerializedError) => {
+          dispatch(
+            setAlert({
+              variant: "danger",
+              message: "Unable to update profile picture.",
+            })
+          );
+        })
     );
     setShowEditUserForm(false);
+    resetPfp();
   };
 
   return (

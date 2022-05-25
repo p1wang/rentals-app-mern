@@ -1,5 +1,6 @@
 import React from "react";
 import { Container } from "react-bootstrap";
+
 import Footer from "./Footer";
 import NavbarComp from "./NavbarComp";
 

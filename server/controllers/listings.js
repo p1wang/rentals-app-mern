@@ -1,10 +1,13 @@
+import mongoose from "mongoose";
+
 import ListingModel from "../models/listing.js";
 import UserModel from "../models/user.js";
-import mongoose from "mongoose";
 
 // create listings
 export const createListing = async (req, res) => {
   const listing = req.body;
+
+  console.log(listing);
 
   try {
     const existingUser = await UserModel.findOne({ _id: req.userId });
@@ -28,6 +31,7 @@ export const createListing = async (req, res) => {
 // getListings
 export const getListings = async (req, res) => {
   const { page } = req.query;
+  console.log(page);
   const limit = 9;
 
   try {

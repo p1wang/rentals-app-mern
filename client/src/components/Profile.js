@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { Button, Col, Container, Image, Row, Stack } from "react-bootstrap";
+import { Button, Image, Stack } from "react-bootstrap";
 import { useSelector } from "react-redux";
+
 import UpdateUserForm from "./Forms/UpdateUserForm";
+import defaultPfp from "../assets/images/default-pfp.jpeg";
 
 const Profile = () => {
   const [showEditUserForm, setShowEditUserForm] = useState(false);
-  const { user } = useSelector((state) => ({ ...state.auth }));
+  const { user } = useSelector((state) => state.users);
   const [target, setTarget] = useState("");
 
   const handleUpdate = (field) => {
@@ -23,7 +25,7 @@ const Profile = () => {
 
       <div>
         <Image
-          src={user?.result.profilePic}
+          src={user?.result?.profilePic ? user?.result?.profilePic : defaultPfp}
           width="60px"
           roundedCircle
           alt="profile pic"

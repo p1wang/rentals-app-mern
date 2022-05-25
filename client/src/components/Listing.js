@@ -1,50 +1,98 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import Moment from "react-moment";
 import { Card, Button, Offcanvas } from "react-bootstrap";
+
+import { useDispatch, useSelector } from "react-redux";
+import { FaRegHeart } from "react-icons/fa";
+import { BsBoxArrowRight } from "react-icons/bs";
+import { useMatch, useNavigate } from "react-router-dom";
+import ListingDetails from "./ListingDetails";
+import { setAlert } from "../redux/alertSlice";
 import {
   deleteListing,
   likeListing,
   setCurrentListing,
 } from "../redux/listingsSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { AiOutlineStar } from "react-icons/ai";
-import { BsBoxArrowRight } from "react-icons/bs";
 
-import ListingDetails from "./ListingDetails";
-import { useNavigate } from "react-router-dom";
-
-const Listing = ({ listing, status, setShowEditForm, setShowMessageForm }) => {
-  const { user } = useSelector((state) => ({ ...state.auth }));
-
+const Listing = ({ listing, setShowEditForm, setShowMessageForm }) => {
+  const { user } = useSelector((state) => state.users);
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
   const isCreator = user?.result._id === listing?.creator;
+  const navigate = useNavigate();
+
+  const match = useMatch("/listings");
 
   const handleClose = () => setShow(false);
 
   const handleLike = () => {
     if (!user) {
-      console.log("");
+      dispatch(
+        setAlert({
+          variant: "warning",
+          message: "Please sign in to like listings.",
+        })
+      );
     } else {
-      dispatch(likeListing({ id: listing._id }));
+      dispatch(likeListing({ id: listing._id }))
+        .unwrap()
+        .then(() => {
+          return;
+        })
+        .catch((rejectedValueOrSerializedError) => {
+          dispatch(
+            setAlert({
+              variant: "danger",
+              message: "Unable to like listing.",
+            })
+          );
+        });
     }
   };
 
   const handleMessage = () => {
-    setShowMessageForm(true);
+    dispatch(setCurrentListing(listing));
+    if (!user) {
+      dispatch(
+        setAlert({
+          variant: "warning",
+          message: "Please sign in to send message.",
+        })
+      );
+    } else {
+      setShowMessageForm(true);
+    }
   };
 
   const handleDelete = () => {
-    dispatch(deleteListing({ id: listing._id }));
+    dispatch(deleteListing({ id: listing._id }))
+      .unwrap()
+      .then(() => {
+        dispatch(
+          setAlert({
+            variant: "success",
+            message: "Listing deleted.",
+          })
+        );
+        match && navigate(0);
+      })
+      .catch((rejectedValueOrSerializedError) => {
+        dispatch(
+          setAlert({
+            variant: "danger",
+            message: "Unable to delete listing.",
+          })
+        );
+      });
   };
 
   const handleUpdate = () => {
+    dispatch(setCurrentListing(listing));
     setShowEditForm(true);
-    setCurrentListing(listing);
   };
 
   const handleViewDetails = () => {
-    setCurrentListing(listing);
+    dispatch(setCurrentListing(listing));
     setShow(true);
   };
 
@@ -52,22 +100,24 @@ const Listing = ({ listing, status, setShowEditForm, setShowMessageForm }) => {
     <>
       <Card>
         {listing.likes.includes(user?.result._id) ? (
-          <AiOutlineStar
-            size={42}
+          <FaRegHeart
+            size={36}
             style={{
               position: "absolute",
-              right: "0px",
+              top: "5px",
+              right: "5px",
               cursor: "pointer",
             }}
             className="text-warning"
             onClick={handleLike}
           />
         ) : (
-          <AiOutlineStar
-            size={42}
+          <FaRegHeart
+            size={36}
             style={{
               position: "absolute",
-              right: "0px",
+              top: "5px",
+              right: "5px",
               cursor: "pointer",
             }}
             className="text-white"
@@ -105,9 +155,12 @@ const Listing = ({ listing, status, setShowEditForm, setShowMessageForm }) => {
             </>
           )}
 
-          <Button variant="outline-primary" onClick={handleMessage}>
-            Message
-          </Button>
+          {!isCreator && (
+            <Button variant="outline-primary" onClick={handleMessage}>
+              Message
+            </Button>
+          )}
+
           <Button onClick={handleViewDetails} variant="outline-primary">
             <BsBoxArrowRight size={24} />
           </Button>
@@ -119,7 +172,7 @@ const Listing = ({ listing, status, setShowEditForm, setShowMessageForm }) => {
             style={{ minWidth: "60vw" }}
           >
             <Offcanvas.Header closeButton>
-              <Offcanvas.Title>Offcanvas</Offcanvas.Title>
+              <Offcanvas.Title></Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
               <ListingDetails />

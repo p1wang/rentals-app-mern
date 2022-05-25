@@ -7,21 +7,24 @@ import {
   Button,
   Dropdown,
   DropdownButton,
+  Image,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setLogout } from "../redux/authSlice";
-import { resetListingsState } from "../redux/listingsSlice";
+import { GoMail } from "react-icons/go";
+
+import { setAlert } from "../redux/alertSlice";
+import { setLogout } from "../redux/usersSlice";
+import defaultPfp from "../assets/images/default-pfp.jpeg";
 
 const NavbarComp = () => {
-  const { user } = useSelector((state) => ({ ...state.auth }));
+  const { user } = useSelector((state) => state.users);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     navigate("/auth", { replace: true });
     dispatch(setLogout());
-    dispatch(resetListingsState());
   };
 
   const handlePostAd = () => {
@@ -29,12 +32,18 @@ const NavbarComp = () => {
       navigate("/listings/new");
     } else {
       navigate("/auth");
+      dispatch(
+        setAlert({
+          variant: "warning",
+          message: "To post listing please sign in.",
+        })
+      );
     }
   };
 
   return (
     <>
-      <Navbar bg="light" expand="lg" className="mb-3 py-3">
+      <Navbar bg="light" expand="lg" className="py-3">
         <Container>
           <Navbar.Brand href="/">Rentals</Navbar.Brand>
           <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-lg`} />
@@ -49,13 +58,32 @@ const NavbarComp = () => {
               </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-              <Nav className="justify-content-end flex-grow-1 gap-3">
+              <Nav className="justify-content-end align-items-center flex-grow-1 gap-3">
                 {user ? (
                   <>
                     <Navbar.Text>
                       Hi, <span>{user?.result.name}</span>
                     </Navbar.Text>
-                    <DropdownButton id="dropdown-basic-button" title="Settings">
+
+                    <Nav.Link href="/inbox" className="text-primary btn">
+                      <GoMail size={24} />
+                    </Nav.Link>
+                    <DropdownButton
+                      id="settings-dropdown"
+                      title={
+                        <Image
+                          src={
+                            user?.result?.profilePic
+                              ? user?.result?.profilePic
+                              : defaultPfp
+                          }
+                          width="40px"
+                          roundedCircle
+                          alt="profile pic"
+                        />
+                      }
+                      variant="outline-light"
+                    >
                       <Dropdown.Item href="/dashboard">Dashboard</Dropdown.Item>
                       <Dropdown.Item href="#" onClick={handleLogout}>
                         Log out
@@ -63,14 +91,12 @@ const NavbarComp = () => {
                     </DropdownButton>
                   </>
                 ) : (
-                  <Nav.Link href="/auth" className="text-dark">
+                  <Nav.Link href="/auth" className="text-primary">
                     Signin
                   </Nav.Link>
                 )}
 
-                <Button variant="success" onClick={handlePostAd}>
-                  Post ad
-                </Button>
+                <Button onClick={handlePostAd}>Post ad</Button>
               </Nav>
             </Offcanvas.Body>
           </Navbar.Offcanvas>

@@ -77,9 +77,13 @@ export const updateUser = async (req, res) => {
       update.password = await bcrypt.hash(update.password, saltRounds);
     }
 
-    const updatedUser = await UserModel.findByIdAndUpdate(id, update, {
-      new: true,
-    });
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      id,
+      { $set: update },
+      {
+        new: true,
+      }
+    );
 
     const token = jwt.sign(
       { email: updatedUser.email, id: updatedUser._id },
@@ -90,6 +94,36 @@ export const updateUser = async (req, res) => {
     );
 
     res.status(201).json({ result: updatedUser, token });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+};
+
+export const sendMessage = async (req, res) => {
+  const { messageTitle, messageBody, senderName } = req.body;
+  const { id } = req.params;
+
+  const newMessage = {
+    messageTitle: messageTitle,
+    messageBody: messageBody,
+    senderName: senderName,
+    senderId: req.userId,
+  };
+
+  try {
+    const existingUser = await UserModel.findOne({ _id: req.userId });
+
+    if (!existingUser)
+      return res.status(404).json({ message: "User doesn't exist" });
+      
+    await UserModel.findByIdAndUpdate(
+      id,
+      { $push: { messages: newMessage } },
+      {
+        new: true,
+      }
+    );
+    res.status(201).json({ message: "Message successfully received." });
   } catch (error) {
     res.status(500).json({ error });
   }
