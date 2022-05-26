@@ -24,7 +24,7 @@ export const createListing = async (req, res) => {
 
     res.status(200).json(newListing);
   } catch (error) {
-    res.status(404).json({ error });
+    res.status(404).json({ message: "Something went wrong" });
   }
 };
 
@@ -44,7 +44,7 @@ export const getListings = async (req, res) => {
 
     res.status(200).json({ totalPages: Math.ceil(total / limit), listings });
   } catch (error) {
-    res.status(404).json({ error });
+    res.status(404).json({ message: "Something went wrong" });
   }
 };
 
@@ -54,13 +54,13 @@ export const getListing = async (req, res) => {
 
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(404).json({ message: `No listing with id: ${id}` });
+      return res.status(404).json({ message: "Something went wrong" });
     }
 
     const listing = await ListingModel.findById(id);
     res.status(200).json(listing);
   } catch (error) {
-    res.status(404).json({ error });
+    res.status(404).json({ message: "Something went wrong" });
   }
 };
 
@@ -77,13 +77,13 @@ export const deleteListing = async (req, res) => {
 
     // check if listing exists
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(404).json({ message: `No listing with id: ${id}` });
+      return res.status(404).json({ message: "Something went wrong" });
     }
     await ListingModel.findByIdAndRemove(id);
 
     res.status(200).json(id);
   } catch (error) {
-    res.status(404).json({ error });
+    res.status(404).json({ message: "Something went wrong" });
   }
 };
 
@@ -100,7 +100,7 @@ export const updateListing = async (req, res) => {
       return res.status(404).json({ message: "User doesn't exist" });
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(404).json({ message: `No listing with id: ${id}` });
+      return res.status(404).json({ message: "Something went wrong" });
     }
 
     const updatedListing = await ListingModel.findByIdAndUpdate(id, update, {
@@ -109,7 +109,7 @@ export const updateListing = async (req, res) => {
 
     res.status(200).json(updatedListing);
   } catch (error) {
-    res.status(404).json({ error });
+    res.status(404).json({ message: "Something went wrong" });
   }
 };
 
@@ -124,7 +124,7 @@ export const likeListing = async (req, res) => {
       return res.status(404).json({ message: "User doesn't exist" });
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(404).json({ message: `No listing with id: ${id}` });
+      return res.status(404).json({ message: "Something went wrong" });
     }
 
     const oldListing = await ListingModel.findById(id);
@@ -136,9 +136,7 @@ export const likeListing = async (req, res) => {
     }
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res
-        .status(404)
-        .json({ message: `No listing exist with id: ${id}` });
+      return res.status(404).json({ message: "Something went wrong" });
     }
 
     const updatedListing = await ListingModel.findByIdAndUpdate(
@@ -151,7 +149,7 @@ export const likeListing = async (req, res) => {
 
     res.status(200).json(updatedListing);
   } catch (error) {
-    res.status(404).json({ error });
+    res.status(404).json({ message: "Something went wrong" });
   }
 };
 
@@ -168,7 +166,7 @@ export const getListingsByUser = async (req, res) => {
     const userListings = await ListingModel.find({ creator: id });
     res.status(200).json(userListings);
   } catch (error) {
-    res.status(404).json({ error });
+    res.status(404).json({ message: "Something went wrong" });
   }
 };
 
@@ -185,7 +183,7 @@ export const getLikedListings = async (req, res) => {
     const likedListings = await ListingModel.find({ likes: id });
     res.status(200).json(likedListings);
   } catch (error) {
-    res.status(404).json({ error });
+    res.status(404).json({ message: "Something went wrong" });
   }
 };
 
@@ -247,6 +245,6 @@ export const getListingsByQuery = async (req, res) => {
       .status(200)
       .json({ totalPages: Math.ceil(total / limit), limitedFilteredListings });
   } catch (error) {
-    res.status(404).json({ error });
+    res.status(404).json({ message: "Something went wrong" });
   }
 };

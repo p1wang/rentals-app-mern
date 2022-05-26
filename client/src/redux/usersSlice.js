@@ -4,35 +4,51 @@ import * as api from "../api";
 // actions
 export const signUp = createAsyncThunk(
   "users/signUp",
-  async ({ formData, navigate }) => {
-    const { data } = await api.signUp(formData);
-    navigate("/");
-    return data;
+  async ({ formData, navigate }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.signUp(formData);
+      navigate("/");
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
   }
 );
 
 export const signIn = createAsyncThunk(
   "users/signIn",
-  async ({ formData, navigate }) => {
-    const { data } = await api.signIn(formData);
-    navigate("/");
-    return data;
+  async ({ formData, navigate }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.signIn(formData);
+      navigate("/");
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
   }
 );
 
 export const updateUser = createAsyncThunk(
   "users/updateUser",
-  async ({ id, update }) => {
-    const { data } = await api.updateUser(id, update);
-    return data;
+  async ({ id, update }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.updateUser(id, update);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
   }
 );
 
 export const sendMessage = createAsyncThunk(
   "users/sendMessage",
-  async ({ id, message }) => {
-    const { data } = await api.sendMessage(id, message);
-    return data;
+  async ({ id, message }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.sendMessage(id, message);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
   }
 );
 
@@ -92,6 +108,15 @@ export const usersSlice = createSlice({
     },
 
     // sendMessage
+    [updateUser.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [updateUser.rejected]: (state) => {
+      state.isLoading = false;
+    },
+    [updateUser.fulfilled]: (state) => {
+      state.isLoading = false;
+    },
   },
 });
 

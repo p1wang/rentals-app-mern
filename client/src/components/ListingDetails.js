@@ -68,7 +68,7 @@ const ListingDetails = () => {
         <Row className="m-2 border-bottom">
           <Col>
             <span className="fs-5 ">Contact:</span>
-            <div className="d-flex align-items-center">
+            <div className="d-flex align-items-center m-2">
               <Image
                 src={
                   user?.result?.profilePic

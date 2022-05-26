@@ -54,7 +54,7 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
               dispatch(
                 setAlert({
                   variant: "danger",
-                  message: "Unable to update listing.",
+                  message: rejectedValueOrSerializedError,
                 })
               );
             })
@@ -82,7 +82,7 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
               dispatch(
                 setAlert({
                   variant: "danger",
-                  message: "Unable to create listing.",
+                  message: rejectedValueOrSerializedError,
                 })
               );
             })

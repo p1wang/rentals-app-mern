@@ -40,7 +40,7 @@ const MessageForm = ({
         dispatch(
           setAlert({
             variant: "danger",
-            message: "Something went wrong, please try again.",
+            message: rejectedValueOrSerializedError,
           })
         );
       });

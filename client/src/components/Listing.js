@@ -43,7 +43,7 @@ const Listing = ({ listing, setShowEditForm, setShowMessageForm }) => {
           dispatch(
             setAlert({
               variant: "danger",
-              message: "Unable to like listing.",
+              message: rejectedValueOrSerializedError,
             })
           );
         });
@@ -80,7 +80,7 @@ const Listing = ({ listing, setShowEditForm, setShowMessageForm }) => {
         dispatch(
           setAlert({
             variant: "danger",
-            message: "Unable to delete listing.",
+            message: rejectedValueOrSerializedError,
           })
         );
       });

@@ -4,74 +4,110 @@ import * as api from "../api";
 // actions
 export const createListing = createAsyncThunk(
   "listings/createListing",
-  async ({ newListing }) => {
-    const { data } = await api.createListing(newListing);
-    return data;
+  async ({ newListing }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.createListing(newListing);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
   }
 );
 
 export const getListings = createAsyncThunk(
   "listings/getListings",
-  async ({ searchQuery }) => {
+  async ({ searchQuery }, { rejectWithValue }) => {
     console.log(searchQuery);
-    const { data } = await api.getListings(searchQuery);
-    return data;
+    try {
+      const { data } = await api.getListings(searchQuery);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
   }
 );
 
 export const getListing = createAsyncThunk(
   "listings/getListing",
-  async ({ id }) => {
-    const { data } = await api.getListing(id);
-    return data;
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.getListing(id);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
   }
 );
 
 export const deleteListing = createAsyncThunk(
   "listings/deleteListing",
-  async ({ id }) => {
-    const { data } = await api.deleteListing(id);
-    return data;
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.deleteListing(id);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
   }
 );
 
 export const updateListing = createAsyncThunk(
   "listings/updateListing",
-  async ({ id, update }) => {
-    const { data } = await api.updateListing(id, update);
-    return data;
+  async ({ id, update }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.updateListing(id, update);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
   }
 );
 
 export const likeListing = createAsyncThunk(
   "listings/likeListing",
-  async ({ id }) => {
-    const { data } = await api.likeListing(id);
-    return data;
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.likeListing(id);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
   }
 );
 
 export const getListingsByUser = createAsyncThunk(
   "listings/getListingsByUser",
-  async ({ id }) => {
-    const { data } = await api.getListingsByUser(id);
-    return data;
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.getListingsByUser(id);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
   }
 );
 
 export const getLikedListings = createAsyncThunk(
   "listings/getLikedListings",
-  async ({ id }) => {
-    const { data } = await api.getLikedListings(id);
-    return data;
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.getLikedListings(id);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
   }
 );
 
 export const getListingsByQuery = createAsyncThunk(
   "listings/getListingsByQuery",
-  async ({ searchQuery }) => {
-    const { data } = await api.getListingsByQuery(searchQuery);
-    return data;
+  async ({ searchQuery }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.getListingsByQuery(searchQuery);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
   }
 );
 

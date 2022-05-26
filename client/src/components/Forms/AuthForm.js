@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 
-
 import { signIn, signUp } from "../../redux/usersSlice";
 import { setAlert } from "../../redux/alertSlice";
 
@@ -53,7 +52,7 @@ const AuthForm = () => {
             dispatch(
               setAlert({
                 variant: "danger",
-                message: "Something went wrong, please try again.",
+                message: rejectedValueOrSerializedError,
               })
             );
           })
@@ -66,7 +65,7 @@ const AuthForm = () => {
             dispatch(
               setAlert({
                 variant: "danger",
-                message: "Incorrect password or email, please try again.",
+                message: rejectedValueOrSerializedError,
               })
             );
           });

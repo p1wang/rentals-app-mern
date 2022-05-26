@@ -3,7 +3,7 @@ import axios from "axios";
 const API = axios.create({ baseURL: "http://localhost:5001" });
 
 // const API = axios.create({
-//   baseURL: "https://dauntless-locker-mern-app.herokuapp.com",
+//   baseURL: "https://rentals-mern-app.herokuapp.com/",
 // });
 
 // adds req.userID to the request

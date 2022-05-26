@@ -32,7 +32,7 @@ export const signIn = async (req, res) => {
 
     res.status(200).json({ result: existingUser, token });
   } catch (error) {
-    res.status(500).json({ error });
+    res.status(500).json({ message: "Something went wrong"  });
   }
 };
 
@@ -61,7 +61,7 @@ export const signUp = async (req, res) => {
     });
     res.status(201).json({ result, token });
   } catch (error) {
-    res.status(500).json({ error });
+    res.status(500).json({ message: "Something went wrong"  });
   }
 };
 
@@ -95,7 +95,7 @@ export const updateUser = async (req, res) => {
 
     res.status(201).json({ result: updatedUser, token });
   } catch (error) {
-    res.status(500).json({ error });
+    res.status(500).json({ message: "Something went wrong"  });
   }
 };
 
@@ -115,7 +115,7 @@ export const sendMessage = async (req, res) => {
 
     if (!existingUser)
       return res.status(404).json({ message: "User doesn't exist" });
-      
+
     await UserModel.findByIdAndUpdate(
       id,
       { $push: { messages: newMessage } },
@@ -125,6 +125,6 @@ export const sendMessage = async (req, res) => {
     );
     res.status(201).json({ message: "Message successfully received." });
   } catch (error) {
-    res.status(500).json({ error });
+    res.status(500).json({ message: "Something went wrong" });
   }
 };

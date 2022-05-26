@@ -42,7 +42,7 @@ const UpdateUserForm = ({ showEditUserForm, setShowEditUserForm, target }) => {
         dispatch(
           setAlert({
             variant: "danger",
-            message: "Unable to update name.",
+            message: rejectedValueOrSerializedError,
           })
         );
       });
@@ -65,7 +65,7 @@ const UpdateUserForm = ({ showEditUserForm, setShowEditUserForm, target }) => {
         dispatch(
           setAlert({
             variant: "danger",
-            message: "Unable to update password.",
+            message: rejectedValueOrSerializedError,
           })
         );
       });
@@ -94,7 +94,7 @@ const UpdateUserForm = ({ showEditUserForm, setShowEditUserForm, target }) => {
           dispatch(
             setAlert({
               variant: "danger",
-              message: "Unable to update profile picture.",
+              message: rejectedValueOrSerializedError,
             })
           );
         })
