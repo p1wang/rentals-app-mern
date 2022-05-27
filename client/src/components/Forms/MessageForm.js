@@ -10,7 +10,6 @@ const MessageForm = ({
   showMessageForm,
   setShowMessageForm,
   receiverId,
-  senderName,
 }) => {
   const dispatch = useDispatch();
   const { register, handleSubmit, reset } = useForm();
@@ -20,11 +19,7 @@ const MessageForm = ({
     dispatch(
       sendMessage({
         id: receiverId,
-        message: {
-          ...formData,
-          senderPfp: user?.result?.profilePic,
-          senderName: senderName,
-        },
+        message: formData,
       })
     )
       .unwrap()
@@ -72,8 +67,8 @@ const MessageForm = ({
                       {...register("messageTitle")}
                       required
                       type="text"
+                      maxLength="80"
                       placeholder="Send a message ..."
-                      rows={3}
                     />
                   </Form.Group>
                 </Col>
@@ -90,7 +85,8 @@ const MessageForm = ({
                       type="text"
                       placeholder="Send a message ..."
                       as="textarea"
-                      rows={3}
+                      maxLength="280"
+                      rows={4}
                     />
                   </Form.Group>
                 </Col>

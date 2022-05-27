@@ -12,6 +12,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { GoMail } from "react-icons/go";
+import { BsInboxFill } from "react-icons/bs";
 
 import { setAlert } from "../redux/alertSlice";
 import { setLogout } from "../redux/usersSlice";
@@ -65,8 +66,8 @@ const NavbarComp = () => {
                       Hi, <span>{user?.result.name}</span>
                     </Navbar.Text>
 
-                    <Nav.Link href="/inbox" className="text-primary btn">
-                      <GoMail size={24} />
+                    <Nav.Link href="/inbox" className="btn">
+                      <BsInboxFill size={28} />
                     </Nav.Link>
                     <DropdownButton
                       id="settings-dropdown"

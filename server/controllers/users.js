@@ -5,6 +5,7 @@ import UserModel from "../models/user.js";
 
 const secret = "auth";
 
+// signIn
 export const signIn = async (req, res) => {
   const { email, password } = req.body;
   console.log(password);
@@ -32,10 +33,11 @@ export const signIn = async (req, res) => {
 
     res.status(200).json({ result: existingUser, token });
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong"  });
+    res.status(500).json({ message: "Something went wrong" });
   }
 };
 
+// signUp
 export const signUp = async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
   try {
@@ -55,21 +57,21 @@ export const signUp = async (req, res) => {
 
     await result.save();
 
-    // jwt.sign(payload, secretOrPrivateKey, [options, callback])
     const token = jwt.sign({ email: result.email, id: result._id }, secret, {
       expiresIn: "1h",
     });
     res.status(201).json({ result, token });
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong"  });
+    res.status(500).json({ message: "Something went wrong" });
   }
 };
 
+// updateUser
 export const updateUser = async (req, res) => {
   const update = req.body;
   const { id } = req.params;
-
-  // console.log(update);
+  console.log(id);
+  console.log(req.userId);
 
   try {
     if (update.password) {
@@ -78,7 +80,7 @@ export const updateUser = async (req, res) => {
     }
 
     const updatedUser = await UserModel.findByIdAndUpdate(
-      id,
+      req.userId,
       { $set: update },
       {
         new: true,
@@ -95,26 +97,30 @@ export const updateUser = async (req, res) => {
 
     res.status(201).json({ result: updatedUser, token });
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong"  });
+    res.status(500).json({ message: "Something went wrong" });
   }
 };
 
+// sendMessage
 export const sendMessage = async (req, res) => {
-  const { messageTitle, messageBody, senderName } = req.body;
+  const { messageTitle, messageBody } = req.body;
   const { id } = req.params;
-
-  const newMessage = {
-    messageTitle: messageTitle,
-    messageBody: messageBody,
-    senderName: senderName,
-    senderId: req.userId,
-  };
 
   try {
     const existingUser = await UserModel.findOne({ _id: req.userId });
 
     if (!existingUser)
       return res.status(404).json({ message: "User doesn't exist" });
+
+    const sender = await UserModel.findById({ _id: req.userId });
+
+    const newMessage = {
+      messageTitle: messageTitle,
+      messageBody: messageBody,
+      senderName: sender.name,
+      senderPfp: sender.profilePic,
+      senderId: req.userId,
+    };
 
     await UserModel.findByIdAndUpdate(
       id,
@@ -124,6 +130,42 @@ export const sendMessage = async (req, res) => {
       }
     );
     res.status(201).json({ message: "Message successfully received." });
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+// deleteMessage
+export const deleteMessage = async (req, res) => {
+  const { id } = req.params;
+
+  console.log(id);
+
+  try {
+    const existingUser = await UserModel.findOne({ _id: req.userId });
+
+    if (!existingUser)
+      return res.status(404).json({ message: "User doesn't exist" });
+
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      req.userId,
+      {
+        $pull: { messages: { _id: id } },
+      },
+      {
+        new: true,
+      }
+    );
+
+    const token = jwt.sign(
+      { email: updatedUser.email, id: updatedUser._id },
+      secret,
+      {
+        expiresIn: "1h",
+      }
+    );
+
+    res.status(201).json({ result: updatedUser, token });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
   }

@@ -30,9 +30,9 @@ export const signIn = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
   "users/updateUser",
-  async ({ id, update }, { rejectWithValue }) => {
+  async ({ update }, { rejectWithValue }) => {
     try {
-      const { data } = await api.updateUser(id, update);
+      const { data } = await api.updateUser(update);
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
@@ -45,6 +45,18 @@ export const sendMessage = createAsyncThunk(
   async ({ id, message }, { rejectWithValue }) => {
     try {
       const { data } = await api.sendMessage(id, message);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+export const deleteMessage = createAsyncThunk(
+  "users/deleteMessage",
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.deleteMessage(id);
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
@@ -77,8 +89,8 @@ export const usersSlice = createSlice({
       state.isLoading = false;
     },
     [signUp.fulfilled]: (state, action) => {
-      localStorage.setItem("profile", JSON.stringify({ ...action.payload }));
       state.isLoading = false;
+      localStorage.setItem("profile", JSON.stringify({ ...action.payload }));
       state.user = action.payload;
     },
 
@@ -90,32 +102,46 @@ export const usersSlice = createSlice({
       state.isLoading = false;
     },
     [signIn.fulfilled]: (state, action) => {
+      state.isLoading = false;
       localStorage.setItem("profile", JSON.stringify({ ...action.payload }));
       state.user = action.payload;
     },
 
     // updateUser
     [updateUser.pending]: (state) => {
-      state.isLoading = true;
+      // state.isLoading = true;
     },
     [updateUser.rejected]: (state) => {
       state.isLoading = false;
     },
     [updateUser.fulfilled]: (state, action) => {
-      localStorage.setItem("profile", JSON.stringify({ ...action.payload }));
       state.isLoading = false;
+      localStorage.setItem("profile", JSON.stringify({ ...action.payload }));
       state.user = action.payload;
     },
 
     // sendMessage
-    [updateUser.pending]: (state) => {
+    [sendMessage.pending]: (state) => {
       state.isLoading = true;
     },
-    [updateUser.rejected]: (state) => {
+    [sendMessage.rejected]: (state) => {
       state.isLoading = false;
     },
-    [updateUser.fulfilled]: (state) => {
+    [sendMessage.fulfilled]: (state) => {
       state.isLoading = false;
+    },
+
+    // deleteMessage
+    [deleteMessage.pending]: (state) => {
+      // state.isLoading = true;
+    },
+    [deleteMessage.rejected]: (state) => {
+      state.isLoading = false;
+    },
+    [deleteMessage.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      localStorage.setItem("profile", JSON.stringify({ ...action.payload }));
+      state.user = action.payload;
     },
   },
 });

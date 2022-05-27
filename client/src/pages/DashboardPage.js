@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Listings from "../components/Listings";
 import Loader from "../components/Loader";
 import Profile from "../components/Profile";
+import { setAlert } from "../redux/alertSlice";
 import { getLikedListings, getListingsByUser } from "../redux/listingsSlice";
 
 const DashboardPage = () => {
@@ -16,8 +17,32 @@ const DashboardPage = () => {
   const { user } = useSelector((state) => state.users);
 
   useEffect(() => {
-    dispatch(getLikedListings({ id: user?.result._id }));
-    dispatch(getListingsByUser({ id: user?.result._id }));
+    dispatch(getLikedListings({ id: user?.result._id }))
+      .unwrap()
+      .then(() => {
+        return;
+      })
+      .catch((rejectedValueOrSerializedError) => {
+        dispatch(
+          setAlert({
+            variant: "danger",
+            message: rejectedValueOrSerializedError,
+          })
+        );
+      });
+    dispatch(getListingsByUser({ id: user?.result._id }))
+      .unwrap()
+      .then(() => {
+        return;
+      })
+      .catch((rejectedValueOrSerializedError) => {
+        dispatch(
+          setAlert({
+            variant: "danger",
+            message: rejectedValueOrSerializedError,
+          })
+        );
+      });
   }, [user]); //when user state is ready
 
   return (

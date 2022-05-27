@@ -6,7 +6,6 @@ import defaultPfp from "../assets/images/default-pfp.jpeg";
 
 const ListingDetails = () => {
   const { currentListing } = useSelector((state) => state.listings);
-  const { user } = useSelector((state) => state.users);
 
   return (
     <>
@@ -71,8 +70,8 @@ const ListingDetails = () => {
             <div className="d-flex align-items-center m-2">
               <Image
                 src={
-                  user?.result?.profilePic
-                    ? user?.result?.profilePic
+                  currentListing.creatorPfp
+                    ? currentListing.creatorPfp
                     : defaultPfp
                 }
                 width="40px"

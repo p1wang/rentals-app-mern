@@ -10,7 +10,7 @@ const userSchema = mongoose.Schema({
       messageBody: String,
       senderName: String,
       senderPfp: { type: String, default: "" },
-      senderId: mongoose.SchemaTypes.ObjectId,
+      senderId: String,
     },
   ],
   profilePic: { type: String, default: "" },

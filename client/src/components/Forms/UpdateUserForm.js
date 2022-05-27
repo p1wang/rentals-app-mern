@@ -28,13 +28,13 @@ const UpdateUserForm = ({ showEditUserForm, setShowEditUserForm, target }) => {
   } = useForm();
 
   const onNameSubmit = (formData) => {
-    dispatch(updateUser({ id: user.result._id, update: formData }))
+    dispatch(updateUser({ update: formData }))
       .unwrap()
       .then(() => {
         dispatch(
           setAlert({
             variant: "success",
-            message: "Name updated successfully!",
+            message: "Name successfully updated!",
           })
         );
       })
@@ -51,13 +51,13 @@ const UpdateUserForm = ({ showEditUserForm, setShowEditUserForm, target }) => {
   };
 
   const onPassSubmit = (formData) => {
-    dispatch(updateUser({ id: user.result._id, update: formData }))
+    dispatch(updateUser({ update: formData }))
       .unwrap()
       .then(() => {
         dispatch(
           setAlert({
             variant: "success",
-            message: "Password updated successfully!",
+            message: "Password successfully updated!",
           })
         );
       })
@@ -77,7 +77,6 @@ const UpdateUserForm = ({ showEditUserForm, setShowEditUserForm, target }) => {
     convertToBase64(formData.profilePic[0]).then((convertedImages) =>
       dispatch(
         updateUser({
-          id: user.result._id,
           update: { ...formData, profilePic: convertedImages },
         })
       )

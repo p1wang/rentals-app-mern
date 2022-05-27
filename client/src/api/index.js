@@ -37,6 +37,7 @@ export const likeListing = (id) => API.patch(`/listings/${id}/likes`);
 //users
 export const signUp = (formData) => API.post("/users/signup", formData);
 export const signIn = (formData) => API.post("/users/signin", formData);
-export const updateUser = (id, update) => API.patch(`/users/${id}`, update);
+export const updateUser = (update) => API.patch(`/users/update`, update);
 export const sendMessage = (id, message) =>
   API.patch(`/users/${id}/messages`, message);
+export const deleteMessage = (id) => API.patch(`/users/messages/${id}/delete`);

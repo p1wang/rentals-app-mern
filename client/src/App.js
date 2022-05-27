@@ -10,7 +10,6 @@ import { useEffect, useState } from "react";
 import decode from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 
-
 import "./App.css";
 import HomePage from "./pages/HomePage";
 import DashboardPage from "./pages/DashboardPage";

@@ -25,15 +25,19 @@ const Listings = ({ listings }) => {
         setShowEditForm={setShowEditForm}
       />
       <Row className="g-4">
-        {listings.map((item) => (
-          <Col key={item._id} lg={6} xl={4}>
-            <Listing
-              listing={item}
-              setShowMessageForm={setShowMessageForm}
-              setShowEditForm={setShowEditForm}
-            />
-          </Col>
-        ))}
+        {listings.length > 0 ? (
+          listings.map((item) => (
+            <Col key={item._id} lg={6} xl={4}>
+              <Listing
+                listing={item}
+                setShowMessageForm={setShowMessageForm}
+                setShowEditForm={setShowEditForm}
+              />
+            </Col>
+          ))
+        ) : (
+          <span className="d-block text-center">No listings were found.</span>
+        )}
       </Row>
     </>
   );

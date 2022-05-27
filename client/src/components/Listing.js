@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Moment from "react-moment";
 import { Card, Button, Offcanvas } from "react-bootstrap";
 
@@ -71,10 +71,10 @@ const Listing = ({ listing, setShowEditForm, setShowMessageForm }) => {
         dispatch(
           setAlert({
             variant: "success",
-            message: "Listing deleted.",
+            message: "Listing successfully deleted!",
           })
         );
-        match && navigate(0);
+        // match && navigate(0);
       })
       .catch((rejectedValueOrSerializedError) => {
         dispatch(

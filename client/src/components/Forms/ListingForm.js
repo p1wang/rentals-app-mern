@@ -46,7 +46,7 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
               dispatch(
                 setAlert({
                   variant: "success",
-                  message: "Listing updated successfully!",
+                  message: "Listing successfully updated!",
                 })
               );
             })
@@ -74,7 +74,7 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
               dispatch(
                 setAlert({
                   variant: "success",
-                  message: "Listing successfully created!.",
+                  message: "Listing successfully created!",
                 })
               );
             })
