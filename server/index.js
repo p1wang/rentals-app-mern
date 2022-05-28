@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 
 import listingsRoutes from "./routes/listings.js";
 import usersRoutes from "./routes/users.js";
+import messageRoutes from "./routes/messages.js";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(cors());
 
 app.use("/listings", listingsRoutes);
 app.use("/users", usersRoutes);
+app.use("/messages", messageRoutes);
 
 const PORT = process.env.PORT || 5001;
 

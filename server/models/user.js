@@ -4,15 +4,6 @@ const userSchema = mongoose.Schema({
   email: { type: String, required: true },
   password: { type: String, required: true },
   name: { type: String, required: true },
-  messages: [
-    {
-      messageTitle: String,
-      messageBody: String,
-      senderName: String,
-      senderPfp: { type: String, default: "" },
-      senderId: String,
-    },
-  ],
   profilePic: { type: String, default: "" },
 });
 

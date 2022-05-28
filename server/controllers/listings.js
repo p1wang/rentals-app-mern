@@ -1,5 +1,3 @@
-import mongoose from "mongoose";
-
 import ListingModel from "../models/listing.js";
 import UserModel from "../models/user.js";
 
@@ -53,9 +51,10 @@ export const getListing = async (req, res) => {
   const { id } = req.params;
 
   try {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(404).json({ message: "Something went wrong" });
-    }
+    const existingUser = await UserModel.findOne({ _id: req.userId });
+
+    if (!existingUser)
+      return res.status(404).json({ message: "User doesn't exist" });
 
     const listing = await ListingModel.findById(id);
     res.status(200).json(listing);
@@ -69,16 +68,11 @@ export const deleteListing = async (req, res) => {
   const { id } = req.params;
 
   try {
-    // check if user exists
     const existingUser = await UserModel.findOne({ _id: req.userId });
 
     if (!existingUser)
       return res.status(404).json({ message: "User doesn't exist" });
 
-    // check if listing exists
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(404).json({ message: "Something went wrong" });
-    }
     await ListingModel.findByIdAndRemove(id);
 
     res.status(200).json(id);
@@ -96,12 +90,9 @@ export const updateListing = async (req, res) => {
 
   try {
     const existingUser = await UserModel.findOne({ _id: req.userId });
+
     if (!existingUser)
       return res.status(404).json({ message: "User doesn't exist" });
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(404).json({ message: "Something went wrong" });
-    }
 
     const updatedListing = await ListingModel.findByIdAndUpdate(id, update, {
       new: true,
@@ -123,20 +114,12 @@ export const likeListing = async (req, res) => {
     if (!existingUser)
       return res.status(404).json({ message: "User doesn't exist" });
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(404).json({ message: "Something went wrong" });
-    }
-
     const oldListing = await ListingModel.findById(id);
 
     if (oldListing.likes.includes(req.userId)) {
       oldListing.likes = oldListing.likes.filter((id) => id !== req.userId);
     } else {
       oldListing.likes.push(req.userId);
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(404).json({ message: "Something went wrong" });
     }
 
     const updatedListing = await ListingModel.findByIdAndUpdate(
@@ -181,6 +164,7 @@ export const getLikedListings = async (req, res) => {
       return res.status(404).json({ message: "User doesn't exist" });
 
     const likedListings = await ListingModel.find({ likes: id });
+
     res.status(200).json(likedListings);
   } catch (error) {
     res.status(404).json({ message: "Something went wrong" });

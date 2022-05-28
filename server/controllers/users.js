@@ -42,6 +42,7 @@ export const signUp = async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
   try {
     const existingUser = await UserModel.findOne({ email });
+
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
@@ -74,6 +75,11 @@ export const updateUser = async (req, res) => {
   console.log(req.userId);
 
   try {
+    const existingUser = await UserModel.findOne({ _id: req.userId });
+
+    if (!existingUser)
+      return res.status(404).json({ message: "User doesn't exist" });
+
     if (update.password) {
       const saltRounds = 10;
       update.password = await bcrypt.hash(update.password, saltRounds);
@@ -82,76 +88,6 @@ export const updateUser = async (req, res) => {
     const updatedUser = await UserModel.findByIdAndUpdate(
       req.userId,
       { $set: update },
-      {
-        new: true,
-      }
-    );
-
-    const token = jwt.sign(
-      { email: updatedUser.email, id: updatedUser._id },
-      secret,
-      {
-        expiresIn: "1h",
-      }
-    );
-
-    res.status(201).json({ result: updatedUser, token });
-  } catch (error) {
-    res.status(500).json({ message: "Something went wrong" });
-  }
-};
-
-// sendMessage
-export const sendMessage = async (req, res) => {
-  const { messageTitle, messageBody } = req.body;
-  const { id } = req.params;
-
-  try {
-    const existingUser = await UserModel.findOne({ _id: req.userId });
-
-    if (!existingUser)
-      return res.status(404).json({ message: "User doesn't exist" });
-
-    const sender = await UserModel.findById({ _id: req.userId });
-
-    const newMessage = {
-      messageTitle: messageTitle,
-      messageBody: messageBody,
-      senderName: sender.name,
-      senderPfp: sender.profilePic,
-      senderId: req.userId,
-    };
-
-    await UserModel.findByIdAndUpdate(
-      id,
-      { $push: { messages: newMessage } },
-      {
-        new: true,
-      }
-    );
-    res.status(201).json({ message: "Message successfully received." });
-  } catch (error) {
-    res.status(500).json({ message: "Something went wrong" });
-  }
-};
-
-// deleteMessage
-export const deleteMessage = async (req, res) => {
-  const { id } = req.params;
-
-  console.log(id);
-
-  try {
-    const existingUser = await UserModel.findOne({ _id: req.userId });
-
-    if (!existingUser)
-      return res.status(404).json({ message: "User doesn't exist" });
-
-    const updatedUser = await UserModel.findByIdAndUpdate(
-      req.userId,
-      {
-        $pull: { messages: { _id: id } },
-      },
       {
         new: true,
       }
