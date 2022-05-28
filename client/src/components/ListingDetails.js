@@ -75,9 +75,10 @@ const ListingDetails = () => {
                     : defaultPfp
                 }
                 width="40px"
-                roundedCircle
+                height="40px"
                 alt="profile pic"
                 className="me-4"
+                style={{ borderRadius: "50%", objectFit: "cover" }}
               />
               <span className="fw-light">{currentListing.creatorEmail}</span>
             </div>

@@ -90,7 +90,7 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
 
     isUpdate && setShowEditForm(false);
 
-    // reset();
+    reset();
   };
 
   // ////////////////////////// Multiple /////////////////////////////////

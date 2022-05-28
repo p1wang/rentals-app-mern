@@ -8,7 +8,6 @@ import convertToBase64 from "../../utils/convertToBase64";
 import { setAlert } from "../../redux/alertSlice";
 
 const UpdateUserForm = ({ showEditUserForm, setShowEditUserForm, target }) => {
-  const { user } = useSelector((state) => state.users);
   const dispatch = useDispatch();
 
   const {
@@ -16,11 +15,13 @@ const UpdateUserForm = ({ showEditUserForm, setShowEditUserForm, target }) => {
     handleSubmit: handlePfpSubmit,
     reset: resetPfp,
   } = useForm();
+
   const {
     register: registerPass,
     handleSubmit: handlePassSubmit,
     reset: resetPass,
   } = useForm();
+
   const {
     register: registerName,
     handleSubmit: handleNameSubmit,
@@ -69,6 +70,7 @@ const UpdateUserForm = ({ showEditUserForm, setShowEditUserForm, target }) => {
           })
         );
       });
+    setShowEditUserForm(false);
     resetPass();
   };
 
@@ -113,17 +115,15 @@ const UpdateUserForm = ({ showEditUserForm, setShowEditUserForm, target }) => {
         <Modal.Body>
           {target === "profilePic" && (
             <Form onSubmit={handlePfpSubmit(onPfpSubmit)}>
-              <>
-                <Form.Label>Profile Picture</Form.Label>
-                <Form.Group className="mb-3" controlId="profile-picture">
-                  <Form.Control
-                    {...registerPfp(target)}
-                    required
-                    type="file"
-                    multiple
-                  />
-                </Form.Group>
-              </>
+              <Form.Label>Profile Picture</Form.Label>
+              <Form.Group className="mb-3" controlId="profile-picture">
+                <Form.Control
+                  {...registerPfp(target)}
+                  required
+                  type="file"
+                  multiple
+                />
+              </Form.Group>
 
               <Button
                 variant="primary"
@@ -135,51 +135,43 @@ const UpdateUserForm = ({ showEditUserForm, setShowEditUserForm, target }) => {
             </Form>
           )}
 
-          <Form onSubmit={handleNameSubmit(onNameSubmit)}>
-            {target === "name" && (
-              <>
-                <Form.Label>Name</Form.Label>
-                <Form.Group className="mb-3" controlId="name">
-                  <Form.Control
-                    {...registerName(target)}
-                    required
-                    type="text"
-                  />
-                </Form.Group>
-                <Button
-                  variant="primary"
-                  type="submit"
-                  className="d-block ms-auto"
-                >
-                  Update
-                </Button>
-              </>
-            )}
-          </Form>
+          {target === "name" && (
+            <Form onSubmit={handleNameSubmit(onNameSubmit)}>
+              <Form.Label>Name</Form.Label>
+              <Form.Group className="mb-3" controlId="name">
+                <Form.Control {...registerName(target)} required type="text" />
+              </Form.Group>
+              <Button
+                variant="primary"
+                type="submit"
+                className="d-block ms-auto"
+              >
+                Update
+              </Button>
+            </Form>
+          )}
 
-          <Form onSubmit={handlePassSubmit(onPassSubmit)}>
-            {target === "password" && (
-              <>
-                <Form.Label>Password</Form.Label>
-                <Form.Group className="mb-3" controlId="password">
-                  <Form.Control
-                    {...registerPass(target)}
-                    required
-                    type="text"
-                    minLength="6"
-                    maxLength="20"
-                  />
-                </Form.Group>
-                <Button
-                  variant="primary"
-                  type="submit"
-                  className="d-block ms-auto"
-                >
-                  Update
-                </Button>
-              </>
-            )}
-          </Form>
+          {target === "password" && (
+            <Form onSubmit={handlePassSubmit(onPassSubmit)}>
+              <Form.Label>Password</Form.Label>
+              <Form.Group className="mb-3" controlId="password">
+                <Form.Control
+                  {...registerPass(target)}
+                  required
+                  type="text"
+                  minLength="6"
+                  maxLength="20"
+                />
+              </Form.Group>
+              <Button
+                variant="primary"
+                type="submit"
+                className="d-block ms-auto"
+              >
+                Update
+              </Button>
+            </Form>
+          )}
         </Modal.Body>
       </Modal>
     </>

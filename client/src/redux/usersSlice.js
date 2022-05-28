@@ -40,30 +40,6 @@ export const updateUser = createAsyncThunk(
   }
 );
 
-export const sendMessage = createAsyncThunk(
-  "users/sendMessage",
-  async ({ id, message }, { rejectWithValue }) => {
-    try {
-      const { data } = await api.sendMessage(id, message);
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.response.data.message);
-    }
-  }
-);
-
-export const deleteMessage = createAsyncThunk(
-  "users/deleteMessage",
-  async ({ id }, { rejectWithValue }) => {
-    try {
-      const { data } = await api.deleteMessage(id);
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.response.data.message);
-    }
-  }
-);
-
 export const usersSlice = createSlice({
   name: "users",
   initialState: {
@@ -115,30 +91,6 @@ export const usersSlice = createSlice({
       state.isLoading = false;
     },
     [updateUser.fulfilled]: (state, action) => {
-      state.isLoading = false;
-      localStorage.setItem("profile", JSON.stringify({ ...action.payload }));
-      state.user = action.payload;
-    },
-
-    // sendMessage
-    [sendMessage.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [sendMessage.rejected]: (state) => {
-      state.isLoading = false;
-    },
-    [sendMessage.fulfilled]: (state) => {
-      state.isLoading = false;
-    },
-
-    // deleteMessage
-    [deleteMessage.pending]: (state) => {
-      // state.isLoading = true;
-    },
-    [deleteMessage.rejected]: (state) => {
-      state.isLoading = false;
-    },
-    [deleteMessage.fulfilled]: (state, action) => {
       state.isLoading = false;
       localStorage.setItem("profile", JSON.stringify({ ...action.payload }));
       state.user = action.payload;

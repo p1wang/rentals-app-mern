@@ -27,10 +27,10 @@ const Profile = () => {
         <Image
           src={user?.result?.profilePic ? user?.result?.profilePic : defaultPfp}
           width="60px"
-          roundedCircle
+          height="60px"
           alt="profile pic"
           className="mb-4"
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", borderRadius: "50%", objectFit: "cover" }}
           onClick={() => handleUpdate("profilePic")}
         />
         <p className="fw-light">{user?.result.email}</p>

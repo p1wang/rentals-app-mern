@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Moment from "react-moment";
 import { Card, Button, Offcanvas } from "react-bootstrap";
 
 import { useDispatch, useSelector } from "react-redux";
 import { FaRegHeart } from "react-icons/fa";
 import { BsBoxArrowRight } from "react-icons/bs";
-import { useMatch, useNavigate } from "react-router-dom";
 import ListingDetails from "./ListingDetails";
 import { setAlert } from "../redux/alertSlice";
 import {
@@ -19,9 +18,6 @@ const Listing = ({ listing, setShowEditForm, setShowMessageForm }) => {
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
   const isCreator = user?.result._id === listing?.creator;
-  const navigate = useNavigate();
-
-  const match = useMatch("/listings");
 
   const handleClose = () => setShow(false);
 
@@ -140,7 +136,7 @@ const Listing = ({ listing, setShowEditForm, setShowMessageForm }) => {
             <Card.Text>{listing.bathrooms} Bath</Card.Text>
             <Card.Text>{listing.parkings} Parking</Card.Text>
           </div>
-          <Card.Text>137 Galbraith Cres, Markham, ON L3S 1H8</Card.Text>
+          <Card.Text className="text-end">{listing.postalCode}</Card.Text>
         </Card.Body>
 
         <Card.Footer className={"d-flex justify-content-between"}>

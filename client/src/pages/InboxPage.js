@@ -1,17 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Accordion, Button, Image, ListGroup } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
 import MessageForm from "../components/Forms/MessageForm";
 import defaultPfp from "../assets/images/default-pfp.jpeg";
-import { deleteMessage } from "../redux/usersSlice";
 import { setAlert } from "../redux/alertSlice";
+import { deleteMessage, getMessages } from "../redux/messagesSlice";
 
 const InboxPage = () => {
   const { user } = useSelector((state) => state.users);
+  const { messages } = useSelector((state) => state.messages);
   const [showMessageForm, setShowMessageForm] = useState(false);
   const [receiverId, setReceiverId] = useState("");
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getMessages({ id: user?.result?._id }));
+  }, [user]);
 
   const handleReply = (id) => {
     setReceiverId(id);
@@ -44,12 +49,14 @@ const InboxPage = () => {
   return (
     <>
       <ListGroup style={{ maxWidth: "500px", margin: "auto" }}>
-        {user?.result?.messages.length > 0 ? (
-          user?.result?.messages.map(
+        {messages.length > 0 ? (
+          messages.map(
             ({
               messageTitle,
               messageBody,
               senderName,
+              senderEmail,
+              receiverId,
               senderId,
               senderPfp,
               _id: messageId,
@@ -58,20 +65,19 @@ const InboxPage = () => {
                 <Accordion>
                   <Accordion.Item eventKey="0">
                     <Accordion.Header>
-                      <span>
-                        <Image
-                          src={senderPfp ? senderPfp : defaultPfp}
-                          width="40px"
-                          roundedCircle
-                          alt="profile pic"
-                          className="me-4"
-                        />
-                        {messageTitle}
-                      </span>
+                      <Image
+                        src={senderPfp ? senderPfp : defaultPfp}
+                        width="40px"
+                        height="40px"
+                        style={{ borderRadius: "50%", objectFit: "cover" }}
+                        alt="profile pic"
+                        className="me-4"
+                      />
+                      {messageTitle}
                     </Accordion.Header>
                     <Accordion.Body>
                       <div>
-                        <h6>{`From: ${senderName}`}</h6>
+                        <h6>{`From: ${senderName} (${senderEmail})`}</h6>
                         <p className="fw-light">{messageBody}</p>
                       </div>
                       <div className="d-flex justify-content-between">
@@ -103,7 +109,6 @@ const InboxPage = () => {
       <MessageForm
         showMessageForm={showMessageForm}
         setShowMessageForm={setShowMessageForm}
-        senderName={user?.result?.name}
         receiverId={receiverId}
       />
     </>

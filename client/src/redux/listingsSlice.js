@@ -163,6 +163,7 @@ export const listingsSlice = createSlice({
       state.isLoading = false;
       state.listing = action.payload;
     },
+    
     // deleteListing
     [deleteListing.pending]: (state) => {
       // state.isLoading = true;
@@ -182,6 +183,7 @@ export const listingsSlice = createSlice({
         (listing) => listing._id !== action.payload
       );
     },
+
     // updateListing
     [updateListing.pending]: (state) => {
       state.isLoading = true;

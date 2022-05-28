@@ -11,7 +11,6 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { GoMail } from "react-icons/go";
 import { BsInboxFill } from "react-icons/bs";
 
 import { setAlert } from "../redux/alertSlice";
@@ -79,7 +78,8 @@ const NavbarComp = () => {
                               : defaultPfp
                           }
                           width="40px"
-                          roundedCircle
+                          height="40px"
+                          style={{ borderRadius: "50%", objectFit: "cover" }}
                           alt="profile pic"
                         />
                       }

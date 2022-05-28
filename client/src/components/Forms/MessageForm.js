@@ -4,22 +4,16 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 
 import { setAlert } from "../../redux/alertSlice";
-import { sendMessage } from "../../redux/usersSlice";
+import { sendMessage } from "../../redux/messagesSlice";
 
-const MessageForm = ({
-  showMessageForm,
-  setShowMessageForm,
-  receiverId,
-}) => {
+const MessageForm = ({ showMessageForm, setShowMessageForm, receiverId }) => {
   const dispatch = useDispatch();
   const { register, handleSubmit, reset } = useForm();
-  const { user } = useSelector((state) => state.users);
 
   const onSubmit = (formData) => {
     dispatch(
       sendMessage({
-        id: receiverId,
-        message: formData,
+        message: { ...formData, receiverId: receiverId },
       })
     )
       .unwrap()
