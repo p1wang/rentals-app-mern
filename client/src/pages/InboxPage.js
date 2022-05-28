@@ -15,7 +15,19 @@ const InboxPage = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getMessages({ id: user?.result?._id }));
+    dispatch(getMessages({ id: user?.result?._id }))
+      .unwrap()
+      .then(() => {
+        return;
+      })
+      .catch((rejectedValueOrSerializedError) => {
+        dispatch(
+          setAlert({
+            variant: "danger",
+            message: rejectedValueOrSerializedError,
+          })
+        );
+      });
   }, [user]);
 
   const handleReply = (id) => {

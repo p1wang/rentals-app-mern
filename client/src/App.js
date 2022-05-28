@@ -41,6 +41,7 @@ function App() {
   }, [alert]);
 
   useEffect(() => {
+    // check token expiration
     const token = user?.token;
     if (token) {
       const decodedToken = decode(token);

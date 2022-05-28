@@ -33,8 +33,8 @@ const MessageForm = ({ showMessageForm, setShowMessageForm, receiverId }) => {
           })
         );
       });
+      
     setShowMessageForm(false);
-
     reset();
   };
 

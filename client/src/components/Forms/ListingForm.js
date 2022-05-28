@@ -26,97 +26,81 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
     },
   });
 
-  const onSubmit = (formData) => {
-    convertToBase64(formData.images[0]).then((convertedImages) =>
-      isUpdate
-        ? dispatch(
-            updateListing({
-              id: currentListing._id,
-              update: {
-                ...formData,
-                images: convertedImages,
-                creatorPfp: user?.result?.profilePic
-                  ? user?.result?.profilePic
-                  : "",
-              },
-            })
-          )
-            .unwrap()
-            .then(() => {
-              dispatch(
-                setAlert({
-                  variant: "success",
-                  message: "Listing successfully updated!",
-                })
-              );
-            })
-            .catch((rejectedValueOrSerializedError) => {
-              dispatch(
-                setAlert({
-                  variant: "danger",
-                  message: rejectedValueOrSerializedError,
-                })
-              );
-            })
-        : dispatch(
-            createListing({
-              newListing: {
-                ...formData,
-                images: convertedImages,
-                creatorPfp: user?.result?.profilePic
-                  ? user?.result?.profilePic
-                  : "",
-              },
-            })
-          )
-            .unwrap()
-            .then(() => {
-              dispatch(
-                setAlert({
-                  variant: "success",
-                  message: "Listing successfully created!",
-                })
-              );
-            })
-            .catch((rejectedValueOrSerializedError) => {
-              dispatch(
-                setAlert({
-                  variant: "danger",
-                  message: rejectedValueOrSerializedError,
-                })
-              );
-            })
+  const onSubmit = async (formData) => {
+    console.log(Array.from(formData.images));
+    const imageArray = Array.from(formData.images);
+
+    const convertedImages = await Promise.all(
+      imageArray.map(async (image) => {
+        return await convertToBase64(image);
+      })
     );
+
+    console.log(convertedImages);
+    console.log(imageArray[0]);
+    isUpdate
+      ? dispatch(
+          updateListing({
+            id: currentListing._id,
+            update: {
+              ...formData,
+              images: convertedImages,
+              creatorPfp: user?.result?.profilePic
+                ? user?.result?.profilePic
+                : "",
+            },
+          })
+        )
+          .unwrap()
+          .then(() => {
+            dispatch(
+              setAlert({
+                variant: "success",
+                message: "Listing successfully updated!",
+              })
+            );
+          })
+          .catch((rejectedValueOrSerializedError) => {
+            dispatch(
+              setAlert({
+                variant: "danger",
+                message: rejectedValueOrSerializedError,
+              })
+            );
+          })
+      : dispatch(
+          createListing({
+            newListing: {
+              ...formData,
+              images: convertedImages,
+              creatorPfp: user?.result?.profilePic
+                ? user?.result?.profilePic
+                : "",
+            },
+          })
+        )
+          .unwrap()
+          .then(() => {
+            dispatch(
+              setAlert({
+                variant: "success",
+                message: "Listing successfully created!",
+              })
+            );
+          })
+          .catch((rejectedValueOrSerializedError) => {
+            dispatch(
+              setAlert({
+                variant: "danger",
+                message: rejectedValueOrSerializedError,
+              })
+            );
+          });
 
     isUpdate && setShowEditForm(false);
 
     reset();
   };
-
-  // ////////////////////////// Multiple /////////////////////////////////
-
-  // const convertToBase64 = (file) => {
-  //   return new Promise((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.onload = () => resolve(reader.result);
-  //     reader.readAsDataURL(file);
-  //   });
-  // };
-
-  // const onSubmit = (data) => {
-  //   let convertedFiles = [];
-  //   Object.values(data.images).forEach((file) => {
-  //     convertToBase64(file).then((convertedFile) => {
-  //       convertedFiles.push(convertedFile);
-  //     });
-  //   });
-
-  //   dispatch(
-  //     createListing({ newListing: { ...data, images: convertedFiles } })
-  //   );
-
-  //   reset();
-  // };
 
   return (
     <Form

@@ -5,6 +5,7 @@ import * as api from "../api";
 export const createListing = createAsyncThunk(
   "listings/createListing",
   async ({ newListing }, { rejectWithValue }) => {
+    console.log(newListing);
     try {
       const { data } = await api.createListing(newListing);
       return data;
@@ -163,7 +164,7 @@ export const listingsSlice = createSlice({
       state.isLoading = false;
       state.listing = action.payload;
     },
-    
+
     // deleteListing
     [deleteListing.pending]: (state) => {
       // state.isLoading = true;
