@@ -3,7 +3,7 @@ import { Accordion, Button, Image, ListGroup } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
 import MessageForm from "../components/Forms/MessageForm";
-import defaultPfp from "../assets/images/default-pfp.jpeg";
+import defaultPfp from "../assets/images/blank-pfp.png";
 import { setAlert } from "../redux/alertSlice";
 import { deleteMessage, getMessages } from "../redux/messagesSlice";
 

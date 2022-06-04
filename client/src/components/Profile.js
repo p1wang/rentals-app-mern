@@ -3,7 +3,7 @@ import { Button, Image, Stack } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
 import UpdateUserForm from "./Forms/UpdateUserForm";
-import defaultPfp from "../assets/images/default-pfp.jpeg";
+import defaultPfp from "../assets/images/blank-pfp.png";
 
 const Profile = () => {
   const [showEditUserForm, setShowEditUserForm] = useState(false);

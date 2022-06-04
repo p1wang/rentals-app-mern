@@ -25,7 +25,12 @@ function App() {
   const navigate = useNavigate();
   let location = useLocation();
   const user = JSON.parse(localStorage.getItem("profile"));
-  const { isLoading } = useSelector((state) => state.listings);
+  const { isLoading: listingsIsLoading } = useSelector(
+    (state) => state.listings
+  );
+  const { isLoading: messagesIsLoading } = useSelector(
+    (state) => state.messages
+  );
   const { alert } = useSelector((state) => state.alert);
   const [showAlert, setShowAlert] = useState(false);
 
@@ -61,7 +66,7 @@ function App() {
       )}
 
       <Layout>
-        {isLoading && <Loader />}
+        {(listingsIsLoading || messagesIsLoading) && <Loader />}
         <Routes>
           <Route path="/" element={<Navigate to={"/listings"} />} />
           <Route path="/dashboard" element={<DashboardPage />} />

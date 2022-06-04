@@ -15,7 +15,7 @@ import { BsInboxFill } from "react-icons/bs";
 
 import { setAlert } from "../redux/alertSlice";
 import { setLogout } from "../redux/usersSlice";
-import defaultPfp from "../assets/images/default-pfp.jpeg";
+import defaultPfp from "../assets/images/blank-pfp.png";
 
 const NavbarComp = () => {
   const { user } = useSelector((state) => state.users);

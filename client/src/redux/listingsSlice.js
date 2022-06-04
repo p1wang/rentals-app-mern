@@ -227,7 +227,7 @@ export const listingsSlice = createSlice({
 
     // getListingsByUser
     [getListingsByUser.pending]: (state) => {
-      state.isLoading = true;
+      // state.isLoading = true;
     },
     [getListingsByUser.rejected]: (state) => {
       state.isLoading = false;

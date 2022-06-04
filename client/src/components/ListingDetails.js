@@ -2,7 +2,7 @@ import React from "react";
 import { Carousel, Col, Container, Image, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
-import defaultPfp from "../assets/images/default-pfp.jpeg";
+import defaultPfp from "../assets/images/blank-pfp.png";
 
 const ListingDetails = () => {
   const { currentListing } = useSelector((state) => state.listings);

@@ -20,8 +20,8 @@ const ListingForm = ({ setShowEditForm, isUpdate }) => {
       agreementType: isUpdate ? currentListing.agreementType : "",
       postalCode: isUpdate ? currentListing.postalCode : "",
       price: isUpdate ? currentListing.price : "",
-      images: [],
-      creatorPfp: "",
+      images: isUpdate ? currentListing.images : [],
+      creatorPfp: isUpdate ? currentListing.creatorPfp : "",
       description: isUpdate ? currentListing.description : "",
     },
   });

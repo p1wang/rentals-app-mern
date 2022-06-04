@@ -170,7 +170,7 @@ const AuthForm = () => {
                 placeholder="Confirm password"
               />
               {errors.confirmPassword?.type === "validate" && (
-                <p className="text-danger">errors.confirmPassword.message </p>
+                <p className="text-danger">{errors.confirmPassword.message} </p>
               )}
             </Form.Group>
           </Row>
