@@ -75,11 +75,6 @@ export const updateUser = async (req, res) => {
   console.log(req.userId);
 
   try {
-    const existingUser = await UserModel.findOne({ _id: req.userId });
-
-    if (!existingUser)
-      return res.status(404).json({ message: "User doesn't exist" });
-
     if (update.password) {
       const saltRounds = 10;
       update.password = await bcrypt.hash(update.password, saltRounds);

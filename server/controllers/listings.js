@@ -8,11 +8,6 @@ export const createListing = async (req, res) => {
   console.log(listing);
 
   try {
-    const existingUser = await UserModel.findOne({ _id: req.userId });
-
-    if (!existingUser)
-      return res.status(404).json({ message: "User doesn't exist" });
-
     const newListing = new ListingModel({
       ...listing,
       creator: req.userId,
@@ -51,11 +46,6 @@ export const getListing = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const existingUser = await UserModel.findOne({ _id: req.userId });
-
-    if (!existingUser)
-      return res.status(404).json({ message: "User doesn't exist" });
-
     const listing = await ListingModel.findById(id);
     res.status(200).json(listing);
   } catch (error) {
@@ -68,11 +58,6 @@ export const deleteListing = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const existingUser = await UserModel.findOne({ _id: req.userId });
-
-    if (!existingUser)
-      return res.status(404).json({ message: "User doesn't exist" });
-
     await ListingModel.findByIdAndRemove(id);
 
     res.status(200).json(id);
@@ -89,11 +74,6 @@ export const updateListing = async (req, res) => {
   console.log(update);
 
   try {
-    const existingUser = await UserModel.findOne({ _id: req.userId });
-
-    if (!existingUser)
-      return res.status(404).json({ message: "User doesn't exist" });
-
     const updatedListing = await ListingModel.findByIdAndUpdate(id, update, {
       new: true,
     });
@@ -109,11 +89,6 @@ export const likeListing = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const existingUser = await UserModel.findOne({ _id: req.userId });
-
-    if (!existingUser)
-      return res.status(404).json({ message: "User doesn't exist" });
-
     const oldListing = await ListingModel.findById(id);
 
     if (oldListing.likes.includes(req.userId)) {
@@ -141,11 +116,6 @@ export const getListingsByUser = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const existingUser = await UserModel.findOne({ _id: req.userId });
-
-    if (!existingUser)
-      return res.status(404).json({ message: "User doesn't exist" });
-
     const userListings = await ListingModel.find({ creator: id });
     res.status(200).json(userListings);
   } catch (error) {
@@ -158,11 +128,6 @@ export const getLikedListings = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const existingUser = await UserModel.findOne({ _id: req.userId });
-
-    if (!existingUser)
-      return res.status(404).json({ message: "User doesn't exist" });
-
     const likedListings = await ListingModel.find({ likes: id });
 
     res.status(200).json(likedListings);

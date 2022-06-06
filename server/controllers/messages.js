@@ -8,11 +8,6 @@ export const getMessages = async (req, res) => {
   console.log(id);
 
   try {
-    const existingUser = await UserModel.findOne({ _id: req.userId });
-
-    if (!existingUser)
-      return res.status(404).json({ message: "User doesn't exist" });
-
     const userMessages = await MessageModel.find({ receiverId: id });
 
     res.status(201).json(userMessages);
@@ -28,11 +23,6 @@ export const sendMessage = async (req, res) => {
   console.log(messageTitle);
 
   try {
-    const existingUser = await UserModel.findOne({ _id: req.userId });
-
-    if (!existingUser)
-      return res.status(404).json({ message: "User doesn't exist" });
-
     const sender = await UserModel.findById({ _id: req.userId });
 
     const newMessage = new messageModel({
@@ -59,11 +49,6 @@ export const deleteMessage = async (req, res) => {
   console.log(id);
 
   try {
-    const existingUser = await UserModel.findOne({ _id: req.userId });
-
-    if (!existingUser)
-      return res.status(404).json({ message: "User doesn't exist" });
-
     await messageModel.findByIdAndDelete(id);
 
     res.status(201).json(id);

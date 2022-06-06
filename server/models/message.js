@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 const messageSchema = mongoose.Schema({
-  messageTitle: String,
-  messageBody: String,
+  messageTitle: { type: String, trim: true },
+  messageBody: { type: String, trim: true },
   senderName: String,
   senderPfp: String,
   senderEmail: String,

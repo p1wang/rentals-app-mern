@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 
+import UserModel from "../models/user.js"
+
 const secret = "auth";
 
 const auth = async (req, res, next) => {
@@ -13,9 +15,15 @@ const auth = async (req, res, next) => {
     req.userId = decodedData?.id;
     req.userEmail = decodedData?.email;
 
+    const existingUser = await UserModel.findOne({ _id: req.userId });
+
+    if (!existingUser) {
+      throw new Error();
+    }
+
     next();
   } catch (error) {
-    console.log(error);
+    res.status(401).send({ message: "Please Authenticate" });
   }
 };
 
