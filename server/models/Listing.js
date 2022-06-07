@@ -13,7 +13,7 @@ const listingSchema = mongoose.Schema(
     creatorEmail: String,
     creatorPfp: String,
     images: [String],
-    creator: String,
+    creator: { type: mongoose.Schema.Types.ObjectId, required: true },
     likes: [String],
   },
   { timestamps: true }

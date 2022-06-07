@@ -6,8 +6,8 @@ const messageSchema = mongoose.Schema({
   senderName: String,
   senderPfp: String,
   senderEmail: String,
-  receiverId: String,
-  senderId: String,
+  receiverId: { type: mongoose.Schema.Types.ObjectId, required: true },
+  senderId: { type: mongoose.Schema.Types.ObjectId, required: true },
 });
 
 const MessageModel = mongoose.model("Message", messageSchema);
