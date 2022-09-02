@@ -1,6 +1,10 @@
 # rentals-app-MERN
 <p align="center">
-<img width="800"  alt="rentals" src="https://user-images.githubusercontent.com/59746714/186501483-3b86f66a-fd7f-4180-bf72-cd3a71e030d7.png">
+<img width="1034"  alt="rentals" src="https://user-images.githubusercontent.com/59746714/186501483-3b86f66a-fd7f-4180-bf72-cd3a71e030d7.png">
+</p>
+
+<p align="center">
+<img width="1034" alt="rentals-mobile" src="https://user-images.githubusercontent.com/59746714/188242390-8a2b0a21-b938-49d7-b5fa-27dc68dd3d0a.png">
 </p>
 
 # Description
